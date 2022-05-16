@@ -6,7 +6,14 @@ from sqlalchemy.orm import sessionmaker
 
 load_dotenv("./.env")
 
-SQLALCHEMY_DATABASE_URL = f"""postgresql://{os.getenv("PGUSER")}:{os.getenv("PGPASSWORD")}@{os.getenv("PGHOST")}/{os.getenv("PGDATABASE")}"""
+host = os.getenv("PGHOST")
+port = os.getenv("PGPORT")
+user = os.getenv("PGUSER")
+password = os.getenv("PGPASSWORD")
+database = os.getenv("PGDATABASE")
+dbtype = "postgresql"
+
+SQLALCHEMY_DATABASE_URL = f"{dbtype}://{user}:{password}@{host}:{port}/{database}"
 
 engine = create_engine( SQLALCHEMY_DATABASE_URL)
 
@@ -14,6 +21,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
+# Dependency
 def get_db():
     db = SessionLocal()
     try:
