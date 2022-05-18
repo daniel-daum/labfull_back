@@ -1,6 +1,6 @@
 
 from statistics import mode
-from fastapi import FastAPI, Depends, status, HTTPException
+from fastapi import FastAPI, Depends, Query, status, HTTPException
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import models
@@ -16,7 +16,7 @@ class Test(BaseModel):
 
 models.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = FastAPI(title="LabFull API", version="0.0.1")
 
 
 @app.get("/api/user", status_code=status.HTTP_200_OK)
@@ -74,16 +74,24 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
 
-@app.put("/api/user/{id}")
-async def update_user(id:int, db: Session = Depends(get_db) ):
-    """Updates all the attribue columns for a user based on id."""
+# @app.put("/api/user/{id}")
+# async def update_user(id:int,updated_user:Test, db: Session = Depends(get_db) ):
+#     """Updates all the attribue columns for a user based on id."""
 
-    user = db.query(models.User).filter(models.User.id == id).first()
+#     query = db.query(models.User).filter(models.User.id == id)
 
+#     user = query.first()
 
-    if user == None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+#     if user == None:
+#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
 
+#     updated_u = query.update(updated_user.dict())
+
+#     db.commit()
+#     db.refresh(updated_u)
+    
+
+#     return {user}
 
 
 
