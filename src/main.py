@@ -1,4 +1,5 @@
 
+from re import U
 from statistics import mode
 from fastapi import FastAPI, Depends, Query, status, HTTPException
 from .database import engine, get_db
@@ -74,24 +75,24 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
 
-# @app.put("/api/user/{id}")
-# async def update_user(id:int,updated_user:Test, db: Session = Depends(get_db) ):
-#     """Updates all the attribue columns for a user based on id."""
+@app.put("/api/user/{id}")
+async def update_user(id:int, db: Session = Depends(get_db) ):
+    """Updates all the attribue columns for a user based on id."""
 
-#     query = db.query(models.User).filter(models.User.id == id)
+    query_id = db.query(models.User).filter(models.User.id == id)
 
-#     user = query.first()
+    old_user = query_id.first()
+    
+    if old_user == None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
 
-#     if user == None:
-#             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+    # user = user.dict
 
-#     updated_u = query.update(updated_user.dict())
-
-#     db.commit()
-#     db.refresh(updated_u)
+    # # db.commit()
+    # # db.refresh(updated_u)
     
 
-#     return {user}
+    return {"data":old_user}
 
 
 
