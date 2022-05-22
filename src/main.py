@@ -36,7 +36,7 @@ async def get_single_user(id: int, db: Session = Depends(get_db)):
     user = db.query(models.User).filter(models.User.id == id).first()
 
     if user == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
 
     return {"data":user}
 
@@ -65,7 +65,7 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
     if user == None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
 
     db.delete(user)
     db.commit()
@@ -75,24 +75,22 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
 
-@app.put("/api/user/{id}")
-async def update_user(id:int, db: Session = Depends(get_db) ):
+@app.put("/api/user/{id}",status_code=status.HTTP_200_OK)
+async def update_user(id:int, new_data:Test, db: Session = Depends(get_db)):
     """Updates all the attribue columns for a user based on id."""
 
-    query_id = db.query(models.User).filter(models.User.id == id)
+    get_user_query = db.query(models.User).filter(models.User.id == id)
 
-    old_user = query_id.first()
+    old_user_data =  get_user_query.first()
     
-    if old_user == None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"post with id: {id} was not found")
+    if old_user_data == None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
 
-    # user = user.dict
+    get_user_query.update(new_data.dict(),synchronize_session=False)
 
-    # # db.commit()
-    # # db.refresh(updated_u)
-    
+    db.commit()
 
-    return {"data":old_user}
+    return {"data":get_user_query.first()}
 
 
 
