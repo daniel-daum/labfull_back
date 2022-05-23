@@ -1,35 +1,30 @@
-
-from re import U
-from statistics import mode
-from fastapi import FastAPI, Depends, Query, status, HTTPException
+from fastapi import FastAPI, Depends, status, HTTPException
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import models
-
-from pydantic import BaseModel
-
-class Test(BaseModel):
-    first_name:str
-    last_name:str
-    email:str
-    password_hash:str
-
+from . import schemas
 
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="LabFull API", version="0.0.1")
 
+tags_metadata = [{
+    "name":"users",
+    "description":"Operations with users."
+}]
 
-@app.get("/api/user", status_code=status.HTTP_200_OK)
+# GET ALL USERS
+@app.get("/api/users", status_code=status.HTTP_200_OK, tags=["users"])
 async def get_users(db: Session = Depends(get_db)):
     """Returns all users in the database."""
 
     all_users = db.query(models.User).all()
-    return {"data":all_users}
+
+    return all_users
 
 
-
-@app.get("/api/user/{id}",status_code=status.HTTP_200_OK)
+# GET ONE USER BY ID
+@app.get("/api/users/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["users"])
 async def get_single_user(id: int, db: Session = Depends(get_db)):
     """Returns a single user based on id."""
 
@@ -38,12 +33,12 @@ async def get_single_user(id: int, db: Session = Depends(get_db)):
     if user == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
 
-    return {"data":user}
+    return user
 
 
-
-@app.post("/api/user", status_code=status.HTTP_201_CREATED)
-async def create_new_user(user:Test, db: Session = Depends(get_db)):
+# CREATE A NEW USER
+@app.post("/api/users", status_code=status.HTTP_201_CREATED, response_model=schemas.User, tags=["users"])
+async def create_new_user(user:schemas.CreateUser, db: Session = Depends(get_db)):
     """Creates a new user in the database."""
     
     new_user= models.User(**user.dict())
@@ -52,12 +47,12 @@ async def create_new_user(user:Test, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return {new_user}
+    return new_user
 
 
 
-
-@app.delete("/api/user/{id}")
+# DELETE A USER BY ID
+@app.delete("/api/users/{id}", tags=["users"])
 async def delete_user(id:int, db: Session = Depends(get_db)):
     """Deletes a user in the database based on id."""
 
@@ -74,9 +69,9 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
 
-
-@app.put("/api/user/{id}",status_code=status.HTTP_200_OK)
-async def update_user(id:int, new_data:Test, db: Session = Depends(get_db)):
+# UPDATE A USER BY ID
+@app.put("/api/users/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["users"])
+async def update_user(id:int, new_data:schemas.UpdateUser, db: Session = Depends(get_db)):
     """Updates all the attribue columns for a user based on id."""
 
     get_user_query = db.query(models.User).filter(models.User.id == id)
@@ -90,10 +85,11 @@ async def update_user(id:int, new_data:Test, db: Session = Depends(get_db)):
 
     db.commit()
 
-    return {"data":get_user_query.first()}
+    return get_user_query.first()
 
 
-
+# ROOT
 @app.get("/")
 async def root():
-    return {"message":"Hello Worldd"}
+    """Returns "Hello, World!"""
+    return {"Root":"Hello, World!"}
