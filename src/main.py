@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, status, HTTPException
+from typing import List
 from .database import engine, get_db
 from sqlalchemy.orm import Session
 from . import models
@@ -14,7 +15,7 @@ tags_metadata = [{
 }]
 
 # GET ALL USERS
-@app.get("/api/users", status_code=status.HTTP_200_OK, tags=["users"])
+@app.get("/api/users", status_code=status.HTTP_200_OK, response_model=List[schemas.User], tags=["users"])
 async def get_users(db: Session = Depends(get_db)):
     """Returns all users in the database."""
 
