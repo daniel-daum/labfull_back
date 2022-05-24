@@ -1,5 +1,5 @@
-from enum import unique
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String
+
+from sqlalchemy import TIMESTAMP, Column, DateTime, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.expression import text
 from .database import Base
@@ -24,9 +24,9 @@ class Supply(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     item_name = Column(String(255), nullable=False)
     quantity = Column(Integer, nullable=False)
-    date_ordered = Column(TIMESTAMP(timezone=True), nullable=False)
-    order_status = Column(String(20), nullable=False)
-    temp_sensitive = Column(String(20), nullable=False)
+    date_ordered = Column(Date, nullable=False)
+    order_status = Column(String(20), default="ordered")
+    temp_sensitive = Column(String(20))
     recieved_by = Column(String(255))
     owner_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))

@@ -1,6 +1,9 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
-from pydantic.schema import Optional
-from datetime import datetime
+from datetime import datetime, date
+
+#-----------------users-schemas------------------------------------
+
 
 # Base User Schema
 class UserBase(BaseModel):
@@ -32,4 +35,41 @@ class User(UserBase):
       class Config:
           orm_mode = True
 
+#------------------supplies-schemas------------------------------------
 
+class SuppliesBase(BaseModel):
+    item_name:str
+    quantity:int
+    class Config:
+          orm_mode = True
+
+
+class CreateSupply(SuppliesBase):
+    date_ordered: date
+    temp_sensitive: str
+    order_status:Optional[str]
+    owner_id:str
+
+    class Config:
+          orm_mode = True
+
+
+class UpdateSupply(CreateSupply):
+    pass
+
+    class Config:
+          orm_mode = True
+
+class Supply(SuppliesBase):
+    id: int
+    date_ordered: date
+    temp_sensitive: str
+    owner_id:str
+    recieved_by:Optional[str]
+    owner_id:str
+    created_at:datetime
+    order_status:Optional[str]
+    
+
+    class Config:
+          orm_mode = True
