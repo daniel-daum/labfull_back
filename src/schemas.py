@@ -55,7 +55,7 @@ class CreateSupply(SuppliesBase):
 
 
 class UpdateSupply(CreateSupply):
-    pass
+    order_status:Optional[str]
 
     class Config:
           orm_mode = True
@@ -69,7 +69,24 @@ class Supply(SuppliesBase):
     owner_id:str
     created_at:datetime
     order_status:Optional[str]
-    
+
 
     class Config:
           orm_mode = True
+
+
+#------------------Authentication------------------------------------
+
+class UserLogin(BaseModel):
+    email:EmailStr
+    password:str
+
+class Token(BaseModel):
+    access_token:str
+    token_type:str
+
+class TokenData(BaseModel):
+    id: Optional[str] = None
+
+
+
