@@ -13,6 +13,9 @@ async def get_users(db: Session = Depends(get_db)):
 
     all_users = db.query(models.User).all()
 
+    if all_users == []:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"There are no users in the database.")
+
     return all_users
 
 
