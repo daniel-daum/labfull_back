@@ -71,7 +71,7 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 
 # UPDATE A USER BY ID
-@router.put("/api/users/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
+@router.put("/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
 async def update_user(id:int, new_data:schemas.UpdateUser, db: Session = Depends(get_db)):
     """Updates all the attribue columns for a user based on id."""
 

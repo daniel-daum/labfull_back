@@ -55,7 +55,7 @@ class CreateSupply(SuppliesBase):
 
 
 class UpdateSupply(CreateSupply):
-    pass
+    order_status:Optional[str]
 
     class Config:
           orm_mode = True

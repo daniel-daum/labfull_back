@@ -46,3 +46,35 @@ async def create_new_supply(supply:schemas.CreateSupply, db: Session = Depends(g
 
     return new_supply_item
 
+# DELETE A SUPPLY ITEM
+@router.delete("/{id}", tags=["Supplies"])
+async def delete_supply_item(id:int,db: Session = Depends(get_db)):
+    """Deletes a supply item from the database based on id."""
+
+    supply_item = db.query(models.Supply).filter(models.Supply.id == id).first()
+
+    if supply_item == None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
+
+    db.delete(supply_item)
+    db.commit()
+
+    return None
+
+# UPDATE A SUPPLY ITEM - ALL ATTRIBUTES
+@router.put("/{id}", tags=["Supplies"], response_model=schemas.Supply)
+async def update_supply_item(id:int, new_supply_data:schemas.UpdateSupply,db: Session = Depends(get_db)):
+
+    query_item = db.query(models.Supply).filter(models.Supply.id == id) 
+
+    old_supply_data = query_item.first()
+
+    if old_supply_data== None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id: {id} was not found")
+
+    query_item.update(new_supply_data.dict(), synchronize_session=False)
+
+    db.commit()
+
+
+    return query_item.first()
