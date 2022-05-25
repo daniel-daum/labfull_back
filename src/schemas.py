@@ -73,3 +73,20 @@ class Supply(SuppliesBase):
 
     class Config:
           orm_mode = True
+
+
+#------------------Authentication------------------------------------
+
+class UserLogin(BaseModel):
+    email:EmailStr
+    password:str
+
+class Token(BaseModel):
+    access_token:str
+    token_type:str
+
+class TokenData(BaseModel):
+    id: Optional[str] = None
+
+
+
