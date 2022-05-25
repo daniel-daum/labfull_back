@@ -69,7 +69,7 @@ class Supply(SuppliesBase):
     owner_id:str
     created_at:datetime
     order_status:Optional[str]
-    
+
 
     class Config:
           orm_mode = True
