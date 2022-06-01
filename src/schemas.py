@@ -48,7 +48,7 @@ class CreateSupply(SuppliesBase):
     date_ordered: date
     temp_sensitive: str
     order_status:Optional[str]
-    owner_id:str
+    users_id:str
 
     class Config:
           orm_mode = True
@@ -64,9 +64,8 @@ class Supply(SuppliesBase):
     id: int
     date_ordered: date
     temp_sensitive: str
-    owner_id:str
     recieved_by:Optional[str]
-    owner_id:str
+    users_id:str
     created_at:datetime
     order_status:Optional[str]
 

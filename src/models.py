@@ -15,7 +15,7 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_login = Column(TIMESTAMP(timezone=True))
 
-    supplies = relationship("Supply", back_populates="owner")
+    # supplies = relationship("Supply", back_populates="owner")
 
 
 class Supply(Base):
@@ -28,7 +28,7 @@ class Supply(Base):
     order_status = Column(String(20), default="ordered")
     temp_sensitive = Column(String(20))
     recieved_by = Column(String(255))
-    owner_id = Column(Integer, ForeignKey("users.id"))
+    users_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-    owner = relationship("User", back_populates="supplies")
+    # owner = relationship("User", back_populates="supplies")

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from typing import List
-from .. import models, schemas, utils
+from .. import models, schemas, utils, oauth2
 from .. database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
@@ -8,7 +8,7 @@ router = APIRouter(tags=["Users"], prefix="/api/users")
 
 # GET ALL USERS
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User], tags=["Users"])
-async def get_users(db: Session = Depends(get_db)):
+async def get_users(db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     """Returns all users in the database."""
 
     all_users = db.query(models.User).all()
@@ -21,7 +21,7 @@ async def get_users(db: Session = Depends(get_db)):
 
 # GET ONE USER BY ID
 @router.get("/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
-async def get_single_user(id: int, db: Session = Depends(get_db)):
+async def get_single_user(id: int, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     """Returns a single user based on id."""
 
     user = db.query(models.User).filter(models.User.id == id).first()
@@ -37,16 +37,22 @@ async def get_single_user(id: int, db: Session = Depends(get_db)):
 async def create_new_user(user:schemas.CreateUser, db: Session = Depends(get_db)):
     """Creates a new user in the database."""
 
-    hashed_password = utils.hash(user.password)
+    #Checks email already exists in system
+    query = db.query(models.User).filter(models.User.email == user.email).first()
 
-    user.password = hashed_password
- 
-    new_user= models.User(**user.dict())
+    if query == None:
+        hashed_password = utils.hash(user.password)
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+        user.password = hashed_password
  
+        new_user= models.User(**user.dict())
+
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+    else: 
+        raise HTTPException(status_code=status.HTTP_303_SEE_OTHER, detail="User with email already exists")
 
     return new_user
 
@@ -54,7 +60,7 @@ async def create_new_user(user:schemas.CreateUser, db: Session = Depends(get_db)
 
 # DELETE A USER BY ID
 @router.delete("/{id}", tags=["Users"])
-async def delete_user(id:int, db: Session = Depends(get_db)):
+async def delete_user(id:int, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     """Deletes a user in the database based on id."""
 
     user = db.query(models.User).filter(models.User.id == id).first()
@@ -72,7 +78,7 @@ async def delete_user(id:int, db: Session = Depends(get_db)):
 
 # UPDATE A USER BY ID
 @router.put("/{id}",status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
-async def update_user(id:int, new_data:schemas.UpdateUser, db: Session = Depends(get_db)):
+async def update_user(id:int, new_data:schemas.UpdateUser, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
     """Updates all the attribue columns for a user based on id."""
 
     get_user_query = db.query(models.User).filter(models.User.id == id)
