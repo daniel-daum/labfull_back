@@ -16,4 +16,4 @@ app.include_router(auth.router)
 @app.get("/")
 async def root():
     """Returns "Hello, World!"""
-    return {"Root": "Hello, World!"}
+    return {"Root": "API documentation is located at http://www.localhost:8000/docs"}

@@ -1,9 +1,6 @@
 from sqlalchemy.orm import Session
-
 from ..models import models
-
 from ..schemas import schemas
-
 from . import utils
 
 # GET ALL USERS
@@ -68,13 +65,11 @@ def get_all_supplies(db:Session):
 
     return db.query(models.Supply).all()
 
-
 # GET ONE SUPPLY BY ID
 def get_supply_by_id(db:Session, id:int):
     """Gets a single supply item from the database based on id."""
 
     return db.query(models.Supply).filter(models.Supply.id == id).first()
-
 
 # CREATE A NEW SUPPLY ITEM
 def create_new_supply(db:Session, supply:schemas.CreateSupply):
@@ -87,7 +82,6 @@ def create_new_supply(db:Session, supply:schemas.CreateSupply):
     db.refresh(new_supply_item)
 
     return new_supply_item
-
 
 # DELETE A SUPPLY ITEM
 def delete_supply_item(db:Session, supply:schemas.Supply):
