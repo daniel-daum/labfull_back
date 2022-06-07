@@ -1,7 +1,13 @@
 from sqlalchemy.orm import Session
 from typing import List
-from .. import models, schemas, utils, oauth2, crud
-from .. database import get_db
+
+from ..core.utilities import oauth2, utils
+
+from ..core.models import models
+
+from ..core.schemas import schemas
+from ..core.utilities import crud
+from ..core.models.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
 
