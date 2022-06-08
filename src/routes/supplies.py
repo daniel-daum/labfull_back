@@ -1,12 +1,7 @@
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
-
-from ..core.utilities import oauth2
-
-from ..core.models import models
-
+from ..core.utilities import oauth2, crud
 from ..core.schemas import schemas
-from ..core.utilities import crud
 from sqlalchemy.orm import Session
 from ..core.models.database import get_db
 
@@ -33,7 +28,7 @@ async def get_single_supply(id:int,db: Session = Depends(get_db), current_user:i
 
     supply = crud.get_supply_by_id(db,id)
 
-    if supply == None:
+    if supply == None: 
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply Item with the id:{id} was not found.")
 
     return supply
