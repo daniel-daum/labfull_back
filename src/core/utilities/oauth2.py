@@ -2,7 +2,11 @@ from jose import JWTError, jwt
 from datetime import datetime, timedelta
 
 from sqlalchemy.orm import session
-from . import schemas, database, models
+
+from ..schemas import schemas
+
+from ..models import database
+from ..models import models
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv
@@ -52,7 +56,6 @@ def verify_access_token(token:str, credentials_exception):
 def get_current_user(token: str = Depends(oauth2_scheme), db:session = Depends(database.get_db)):
 
     credentials_exception = HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials", headers={"WWW-Authenticate":"Bearer"})
-
 
     token = verify_access_token(token, credentials_exception)
 

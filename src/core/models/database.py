@@ -15,13 +15,13 @@ dbtype = "postgresql"
 
 SQLALCHEMY_DATABASE_URL = f"{dbtype}://{user}:{password}@{host}:{port}/{database}"
 
-engine = create_engine( SQLALCHEMY_DATABASE_URL)
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-# Dependency
+# DB Dependency
 def get_db():
     db = SessionLocal()
     try:
