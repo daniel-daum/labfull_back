@@ -16,8 +16,7 @@ load_dotenv("./.env")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 SECRET_KEY = os.getenv("SECRETKEY")
 ALGORITHM = os.getenv("ALGORITHM")
-# ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("TOKENEXPIRE")
-ACCESS_TOKEN_EXPIRE_MINUTES = 60
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("TOKENEXPIRE"))
 
 def create_access_token(data:dict):
 
