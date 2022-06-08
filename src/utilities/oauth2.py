@@ -3,10 +3,10 @@ from datetime import datetime, timedelta
 
 from sqlalchemy.orm import session
 
-from ..schemas import schemas
+from ..database import schemas
 
-from ..models import database
-from ..models import models
+from ..database import database
+from ..database import models
 from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from dotenv import load_dotenv

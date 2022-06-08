@@ -1,8 +1,10 @@
 from sqlalchemy.orm import Session
 from typing import List
-from ..core.utilities import oauth2, crud
-from ..core.schemas import schemas
-from ..core.models.database import get_db
+
+from ..utilities import crud
+from ..utilities import oauth2
+from ..database import schemas
+from ..database.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
 
@@ -12,7 +14,7 @@ router = APIRouter(tags=["Users"], prefix="/api/users")
 
 
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User], tags=["Users"])
-async def get_users(db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def get_users(db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Returns all users in the database."""
 
     users = crud.get_all_users(db)
@@ -26,7 +28,7 @@ async def get_users(db: Session = Depends(get_db), current_user: int = Depends(o
 
 # GET ONE USER BY ID
 @router.get("/{id}", status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
-async def get_single_user_id(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def get_single_user_id(id: int, db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Returns a single user based on id."""
 
     user = crud.get_user_by_id(db, id)
@@ -55,7 +57,7 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
 # DELETE A USER BY ID
 @router.delete("/{id}", tags=["Users"])
-async def delete_user(id: int, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
+async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Deletes a user in the database based on id."""
 
     user = crud.get_user_by_id(db, id)
@@ -67,3 +69,5 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user: int 
     crud.delete_user(db, user)
 
     return None
+
+

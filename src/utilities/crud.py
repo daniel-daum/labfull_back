@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
-from ..models import models
-from ..schemas import schemas
+from ..database import models
+from ..database import schemas
 from . import utils
 
 # GET ALL USERS
@@ -94,6 +94,7 @@ def delete_supply_item(db:Session, supply:schemas.Supply):
 
 # UPDATE A SUPPLY ITEM - ALL ATTRIBUTES
 def update_supply_item(db:Session, id:int, supply:schemas.Supply):
+    """Updates all supply items in teh database."""
 
     db.query(models.Supply).filter(models.Supply.id == supply.id).update(supply.dict(), synchrnoize_session=False)
 

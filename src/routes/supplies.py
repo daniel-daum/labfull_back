@@ -1,9 +1,11 @@
 from fastapi import APIRouter, status, Depends, HTTPException
 from typing import List
-from ..core.utilities import oauth2, crud
-from ..core.schemas import schemas
+
+from ..utilities import crud
+from ..utilities import oauth2
+from ..database import schemas
 from sqlalchemy.orm import Session
-from ..core.models.database import get_db
+from ..database.database import get_db
 
 router = APIRouter(tags=["Supplies"],prefix="/api/supplies")
 

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from .core.models.database import engine
-from .core.models import models
+from .database.database import engine
+from .database import models
 from .routes import users, supplies, auth
 
 models.Base.metadata.create_all(bind=engine)
