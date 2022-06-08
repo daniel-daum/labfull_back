@@ -72,19 +72,3 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user: int 
     crud.delete_user(db, user)
 
     return None
-
-
-# UPDATE A USER BY ID - ALL ATTRIBUTES
-@router.put("/{id}", status_code=status.HTTP_200_OK, response_model=schemas.User, tags=["Users"])
-async def update_user(id: int, new_data: schemas.UpdateUser, db: Session = Depends(get_db), current_user: int = Depends(oauth2.get_current_user)):
-    """Updates all the attribue columns for a user based on id."""
-
-    old_user = crud.get_user_by_id(db, id)
-
-    if old_user == None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"User with id: {id} was not found")
-
-    updated_user_info = crud.update_user(db, id, new_data)
-
-    return updated_user_info
