@@ -12,7 +12,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
 
 KEY = settings.KEY
 ALGO = settings.ALGO
-EXPIRE_MINUTES = settings.EXPIRE
+EXPIRE_MINUTES = int(settings.EXPIRE)
 
 def create_access_token(data:dict):
 
