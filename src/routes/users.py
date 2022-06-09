@@ -3,7 +3,7 @@ from typing import List
 
 from ..utilities import crud
 from ..utilities import oauth2
-from ..database import schemas
+from ..database import schemas, models
 from ..database.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
@@ -11,8 +11,6 @@ from fastapi import Depends, status, HTTPException, APIRouter
 router = APIRouter(tags=["Users"], prefix="/api/users")
 
 # GET ALL USERS
-
-
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User], tags=["Users"])
 async def get_users(db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Returns all users in the database."""
@@ -70,4 +68,10 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 
     return None
 
+# UPDATE A USERS NAME
+@router.patch("/first_name", tags=['Users'], response_model=schemas.UpdatedFirstName)
+async def update_user_name(new_name:schemas.UpdateUserInfo, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
 
+    user = crud.update_user_first_name(db, current_user_id, new_name)
+
+    return  user

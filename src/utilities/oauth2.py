@@ -56,7 +56,7 @@ def get_current_user(token: str = Depends(oauth2_scheme), db:session = Depends(d
 
     current_user = db.query(models.User).filter(models.User.id == token.id).first()
 
-    return current_user
+    return current_user.id
 
 
 

@@ -18,14 +18,6 @@ class CreateUser(UserBase):
     class Config:
           orm_mode = True
 
-# Update Existing User - ALL ATTRIBUTES Schema
-class UpdateUser(CreateUser):
-    pass
-
-    class Config:
-          orm_mode = True
-
-
 
 # User Response Schema
 class User(UserBase):
@@ -34,6 +26,23 @@ class User(UserBase):
 
       class Config:
           orm_mode = True
+
+#Update User info partial schema
+class UpdateUserInfo(BaseModel):
+    first_name:Optional[str]
+    last_name:Optional[str]
+    password:Optional[str]
+    
+    class Config:
+          orm_mode = True
+
+# User name response schema
+class UpdatedFirstName(UserBase):
+    first_name:str
+
+    class Config:
+          orm_mode = True
+
 
 #------------------supplies-schemas------------------------------------
 

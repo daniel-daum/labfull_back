@@ -1,24 +1,12 @@
 
-FROM python:3.9
+FROM python:3.10.5
 
-ENV PGUSER=
-ENV PGPASSWORD=
-ENV PGHOST=
-ENV PGDATABASE=
-ENV PGPORT=
+WORKDIR /usr/src/app
 
+COPY requirements.txt ./
 
-WORKDIR /code
+RUN pip install --no-cache-dir -r requirements.txt
 
+COPY . .
 
-COPY ./requirements.txt /code/requirements.txt
-
-
-RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
-
-
-COPY ./src /code/app
-
-EXPOSE 8000
-
-# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]
