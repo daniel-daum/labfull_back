@@ -53,11 +53,23 @@ def update_user(db: Session, id: int, user: schemas.User):
     user.password = hashed_password
 
     user = db.query(models.User).filter(models.User.id == id).update(
-        user.dict(), synchronize_session=False)
+        user.dict(exclude_unset=True), synchronize_session=False)
 
     db.commit()
 
     return get_user_by_id(db,id)
+
+# Update a Users First Name
+def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateFirstName):
+    """Updates a users first name"""
+
+    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.first_name:new_name.first_name})
+
+    db.commit()
+
+    return get_user_by_id(db, current_user_id)
+
+
 
 # GET ALL SUPPLIES
 def get_all_supplies(db:Session):
@@ -92,12 +104,12 @@ def delete_supply_item(db:Session, supply:schemas.Supply):
 
     return None
 
-# UPDATE A SUPPLY ITEM - ALL ATTRIBUTES
-def update_supply_item(db:Session, id:int, supply:schemas.Supply):
-    """Updates all supply items in teh database."""
+# # UPDATE A SUPPLY ITEM - ALL ATTRIBUTES
+# def update_supply_item(db:Session, id:int, supply:schemas.Supply):
+#     """Updates all supply items in teh database."""
 
-    db.query(models.Supply).filter(models.Supply.id == supply.id).update(supply.dict(), synchrnoize_session=False)
+#     db.query(models.Supply).filter(models.Supply.id == supply.id).update(supply.dict(), synchrnoize_session=False)
 
-    db.commit()
+#     db.commit()
 
-    return get_supply_by_id(db, id)
+#     return get_supply_by_id(db, id)
