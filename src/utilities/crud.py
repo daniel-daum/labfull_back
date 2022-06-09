@@ -60,7 +60,7 @@ def update_user(db: Session, id: int, user: schemas.User):
     return get_user_by_id(db,id)
 
 # Update a Users First Name
-def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateUserInfo):
+def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateFirstName):
     """Updates a users first name"""
 
     db.query(models.User).filter(models.User.id == current_user_id).update({models.User.first_name:new_name.first_name})

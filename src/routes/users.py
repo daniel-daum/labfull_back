@@ -69,8 +69,8 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
     return None
 
 # UPDATE A USERS NAME
-@router.patch("/first_name", tags=['Users'], response_model=schemas.UpdatedFirstName)
-async def update_user_name(new_name:schemas.UpdateUserInfo, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+@router.patch("/first_name", tags=['Users'], response_model=schemas.UpdateFirstName)
+async def update_user_name(new_name:schemas.UpdateFirstName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
 
     user = crud.update_user_first_name(db, current_user_id, new_name)
 

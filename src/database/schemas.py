@@ -27,19 +27,9 @@ class User(UserBase):
       class Config:
           orm_mode = True
 
-#Update User info partial schema
-class UpdateUserInfo(BaseModel):
-    first_name:Optional[str]
-    last_name:Optional[str]
-    password:Optional[str]
-    
-    class Config:
-          orm_mode = True
-
-# User name response schema
-class UpdatedFirstName(UserBase):
+#Update User First Name
+class UpdateFirstName(BaseModel):
     first_name:str
-
     class Config:
           orm_mode = True
 
