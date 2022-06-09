@@ -33,6 +33,16 @@ class UpdateFirstName(BaseModel):
     class Config:
           orm_mode = True
 
+class UpdateLastName(BaseModel):
+    last_name:str
+    class Config:
+          orm_mode = True
+
+class UpdateEmail(BaseModel):
+    email:EmailStr
+    class Config:
+          orm_mode = True
+
 
 #------------------supplies-schemas------------------------------------
 
@@ -71,6 +81,12 @@ class Supply(SuppliesBase):
 
     class Config:
           orm_mode = True
+
+class UpdateOrderedStatus(BaseModel):
+    order_status:str
+        
+    class Config:
+         orm_mode = True
 
 
 #------------------Authentication------------------------------------
