@@ -4,8 +4,6 @@ from .database import models
 from .routes import users, supplies, auth
 from fastapi.middleware.cors import CORSMiddleware
 
-models.Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="LabFull API", version="0.0.1")
 
 origins = ["*"]

@@ -15,7 +15,6 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_login = Column(TIMESTAMP(timezone=True))
 
-    # supplies = relationship("Supply", back_populates="owner")
 
 
 class Supply(Base):
@@ -31,4 +30,3 @@ class Supply(Base):
     users_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
-    # owner = relationship("User", back_populates="supplies")

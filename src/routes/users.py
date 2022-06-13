@@ -40,7 +40,7 @@ async def get_single_user_id(id: int, db: Session = Depends(get_db), current_use
 
 # CREATE A NEW USER
 @router.post("/", status_code=status.HTTP_201_CREATED, response_model=schemas.User, tags=["Users"])
-async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
     """Creates a new user in the database."""
 
     db_user = crud.get_user_by_email(db, user)
