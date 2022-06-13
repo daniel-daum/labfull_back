@@ -59,7 +59,7 @@ def update_user(db: Session, id: int, user: schemas.User):
 
     return get_user_by_id(db,id)
 
-# Update a Users First Name
+# UPDATES A USERS FIRST NAME
 def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateFirstName):
     """Updates a users first name"""
 
@@ -69,12 +69,31 @@ def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.Up
 
     return get_user_by_id(db, current_user_id)
 
+# UPDATES A USERS LAST NAME
+def update_user_last_name(db: Session, current_user_id:int, new_name:schemas.UpdateLastName):
+    """Updates a users first name"""
 
+    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.last_name:new_name.last_name})
+
+    db.commit()
+
+    return get_user_by_id(db, current_user_id)
+
+# UPDATES A USERS EMAIL
+def update_user_email(db: Session, current_user_id:int, new_email:schemas.UpdateEmail):
+    """Updates a users email"""
+
+    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.email:new_email.email})
+
+    db.commit()
+
+    return get_supply_by_id(db, current_user_id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL SUPPLIES
 def get_all_supplies(db:Session):
     """Returns all supplies in the database."""
-
     return db.query(models.Supply).all()
 
 # GET ONE SUPPLY BY ID
@@ -104,12 +123,12 @@ def delete_supply_item(db:Session, supply:schemas.Supply):
 
     return None
 
-# # UPDATE A SUPPLY ITEM - ALL ATTRIBUTES
-# def update_supply_item(db:Session, id:int, supply:schemas.Supply):
-#     """Updates all supply items in teh database."""
+# # UPDATE A SUPPLY ITEMS ORDER STATUS
+# def update_supply_order_status(db:Session, new_status:schemas.UpdateOrderedStatus):
+#     """Updates the ordered status of a supply item."""
 
-#     db.query(models.Supply).filter(models.Supply.id == supply.id).update(supply.dict(), synchrnoize_session=False)
+#     db.query(models.Supply).filter(models.Supply.id == id).update({models.Supply.order_status:new_status.order_status})
 
 #     db.commit()
 
-#     return get_supply_by_id(db, id)
+#     return get_supply_by_id(db, int)

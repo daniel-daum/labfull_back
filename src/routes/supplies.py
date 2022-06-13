@@ -57,3 +57,15 @@ async def delete_supply_item(id:int,db: Session = Depends(get_db), current_user:
 
     return None
 
+# UPDATE THE ORDERED STATUS OF A SUPPLY ITEM
+# @router.patch("/order_status/{id}", tags=["Supplies"])
+# async def update_ordered_status(id:int, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
+
+#     supply = crud.get_supply_by_id(db, id)
+
+#     if supply == None:
+#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {id} was not found.")
+
+#     updated_supply = crud.update_supply_order_status(id, db, )
+
+#     return 
