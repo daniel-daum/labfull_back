@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..utilities import crud
-from ..utilities import oauth2
-from ..database import schemas, models
+from ..utilities import crud, oauth2, utils
+from ..database import schemas
 from ..database.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
@@ -45,10 +44,16 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
     db_user = crud.get_user_by_email(db, user)
 
-    if db_user == None:
-        new_user = crud.create_user(db, user)
+    email_validation_flag = utils.check_email(user)
+
+#First checks if user email has @wustl.edu extension, then checks if email already exists in the database.
+    if email_validation_flag:
+        if db_user == None:
+            new_user = crud.create_user(db, user)
+        else:
+            raise HTTPException(status_code=400, detail="Email already registered")
     else:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="You must register with a @wustl.edu email address.")
 
     return new_user
 

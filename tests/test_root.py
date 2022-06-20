@@ -1,4 +1,4 @@
-from .database_testing import client, session
+
 
 def test_root(client):
     res = client.get("/")
