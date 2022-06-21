@@ -1,4 +1,5 @@
 from datetime import datetime
+from venv import create
 from src.database import schemas
 from jose import jwt
 from src.settings import settings
@@ -66,8 +67,32 @@ def test_user_login_email_failure(client, create_user_fixture):
     assert res.json().get('detail') == "Invalid Credentials"
 
 
-    
-def test_get_user_by_id(authorized_client):
-    res = authorized_client.get("/api/users/")
-    print(res.json())
+def test_get_user_by_id(authorized_client, create_user_fixture):
+    res = authorized_client.get("/api/users/1")
+
+    user = schemas.User(**res.json())
+
+    assert res.status_code == 200
+    assert create_user_fixture['id'] == user.id
+    assert create_user_fixture['first_name'] == user.first_name
+    assert create_user_fixture['last_name'] == user.last_name
+    assert create_user_fixture['email'] == user.email
+    assert type(user.created_at) == datetime
+
+
+def test_get_user_by_id_failure(authorized_client,create_user_fixture):
+    res = authorized_client.get("/api/users/2")
+
+    assert res.status_code == 404
+    assert res.json().get('detail') == "User with id: 2 was not found"
+     
+ 
+# def test_get_all_users(authorized_client,create_multiple_users_fixture):
+#     res = authorized_client.get("/api/users/")
+
+#     print(res.json())
+#     assert res.status_code == 200
+
+
+
 
