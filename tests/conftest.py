@@ -6,7 +6,7 @@ from fastapi.testclient import TestClient
 from src.database.database import get_db
 from src.main import app
 from src.utilities import oauth2
-from src.database import models
+from src.database import models, schemas
 import pytest
 
 
@@ -16,7 +16,7 @@ TestingSessionLocal = sessionmaker(
     autocommit=False, autoflush=False, bind=engine)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def session():
     Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
@@ -28,7 +28,7 @@ def session():
         db.close()
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def client(session):
     def override_get_db():
         try:
@@ -41,11 +41,11 @@ def client(session):
     yield TestClient(app)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def create_user_fixture(client):
     """Creates a user in the test database"""
-    user_data = {"first_name": "obi-wan", "last_name": "kenobi",
-                 "email": "obi-wan@wustl.edu", "password": "password"}
+    user_data = {"first_name": "daniel", "last_name": "daum",
+                 "email": "daniel@wustl.edu", "password": "password"}
 
     res = client.post("/api/users/", json=user_data)
 
@@ -55,12 +55,12 @@ def create_user_fixture(client):
     return new_user
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def token(create_user_fixture):
     return oauth2.create_access_token(data={"user_id": create_user_fixture['id']})
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def authorized_client(client, token):
     client.headers = {
         **client.headers,
@@ -70,31 +70,18 @@ def authorized_client(client, token):
     return client
 
 
-# @pytest.fixture
-# def create_multiple_users_fixture(client,session):
 
-#     users = [{"first_name": "obi-wan",
-#              "last_name": "kenobi",
-#               "email": "obi-wan@wustl.edu",
-#               "password": "password"},
-
-#              {"first_name": "anakin",
-#               "last_name": "skywalker",
-#               "email": "anakin@wustl.edu",
-#               "password": "password"}]
-
-#     def create_users_model(users):
-#         return models.User(**users)
-
-#     user_map = map(create_users_model, users)
-
-#     users_list = list(user_map)
+ 
 
 
-#     session.add_all(users_list)
 
-#     session.commit()
 
-#     users = session.query(models.Users).all()
 
-#     return users
+
+
+
+
+        
+
+    
+

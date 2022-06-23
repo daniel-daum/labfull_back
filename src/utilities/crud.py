@@ -44,6 +44,15 @@ def delete_user(db: Session, user: schemas.User):
     db.commit()
 
     return None
+#TEST
+# # Delete ALL USERS
+# def delete_all_users(db: Session):
+
+#     db.query(models.User).delete()
+
+#     db.commit()
+
+#     return None
 
 # UPDATE A USER - ALL
 def update_user(db: Session, id: int, user: schemas.User):

@@ -57,6 +57,15 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
     return new_user
 
+# #TEST
+# @router.delete("/all", tags=["Users"])
+# async def delete_all_users(db: Session = Depends(get_db)):
+#     """Deletes all users in the database"""
+
+#     crud.delete_all_users(db)
+
+#     return None
+
 
 # DELETE A USER BY ID
 @router.delete("/{id}", tags=["Users"])
@@ -98,3 +107,4 @@ async def update_user_email(new_email:schemas.UpdateEmail,db: Session = Depends(
     user = crud.update_user_email(db, current_user_id, new_email)
 
     return user
+
