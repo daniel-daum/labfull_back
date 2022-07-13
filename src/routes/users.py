@@ -5,6 +5,7 @@ from ..utilities import crud, oauth2, utils
 from ..database import schemas
 from ..database.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
+from src.settings import settings
 
 
 router = APIRouter(tags=["Users"], prefix="/api/users")
@@ -54,6 +55,10 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
             raise HTTPException(status_code=400, detail="Email already registered")
     else:
         raise HTTPException(status_code=400, detail="You must register with a @wustl.edu email address.")
+
+    role_data = {"users_id":new_user.id,"role":f"{settings.ROLE}", "admin_created_by":f"{settings.ADMIN}"}
+
+    crud.create_role(db, role_data)
 
     return new_user
 

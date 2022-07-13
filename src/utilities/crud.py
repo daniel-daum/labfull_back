@@ -98,6 +98,21 @@ def update_user_email(db: Session, current_user_id:int, new_email:schemas.Update
 
     return get_supply_by_id(db, current_user_id)
 
+
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# CREATE NEW USER ROLE
+def create_role(db: Session, role:schemas.CreateRole):
+
+    new_role = models.User_Roles(**role)
+
+    db.add(new_role)
+    db.commit()
+    db.refresh(new_role)
+
+
+    return new_role
+
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL SUPPLIES

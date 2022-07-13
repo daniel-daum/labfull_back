@@ -103,4 +103,20 @@ class TokenData(BaseModel):
     id: Optional[str] = None
 
 
+class check_if_authorized(Token):
+    page_name:str
 
+class authorized_response(BaseModel):
+    """Response model if authorized to access a page."""
+    authorized: bool
+
+
+class CreateRole(BaseModel):
+    """Create a Role Schema"""
+    users_id:int
+    role_required:str
+    admin_created_by:str
+
+class GetRoleResponse(CreateRole):
+    """Create a Role response Schema"""
+    created_at: datetime

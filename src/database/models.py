@@ -1,5 +1,5 @@
 
-from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String, Date
+from sqlalchemy import TIMESTAMP, Column, ForeignKey, Integer, String, Date, null
 from sqlalchemy.sql.expression import text
 from .database import Base
 
@@ -14,6 +14,24 @@ class User(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     last_login = Column(TIMESTAMP(timezone=True))
 
+class User_Roles(Base):
+    __tablename__ = "user_roles"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    users_id = Column(Integer)
+    role = Column(String(255), nullable=False)
+    admin_created_by = Column(String(255))
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+
+
+class site_permissions(Base):
+    __tablename__ = "site_permissions"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    page_name = Column(String(255), nullable=False)
+    role_required = Column(String(255), nullable=False)
+    admin_created_by = Column(String(255))
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 
 class Supply(Base):

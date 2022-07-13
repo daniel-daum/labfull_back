@@ -30,3 +30,15 @@ async def login(user_credentials:OAuth2PasswordRequestForm = Depends(), db: Sess
 
     return {"access_token":access_token, "token_type":"bearer"}
 
+
+# @router.post("/verify_access", tage=["Authentication"], response_model=schemas.authorized_response)
+# async def verify(request: schemas.check_if_authorized,db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
+#     """Verifies if a user has permissions to access a specific page on the website."""
+
+
+
+    
+
+
+
+#     return

@@ -18,5 +18,7 @@ class Settings(BaseSettings):
     KEY:str = os.getenv("KEY")
     ALGO:str = os.getenv("ALGO")
     EXPIRE:str = os.getenv("EXPIRE")
+    ADMIN:str = os.getenv("ADMIN")
+    ROLE:str = os.getenv("ROLE")
 
 settings = Settings()
