@@ -18,7 +18,7 @@ async def get_supplies(db: Session = Depends(get_db), current_user:int = Depends
 
     if supplies == []:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"There are no users in the database.")
+                            detail=f"There are no supplies in the database.")
 
     return supplies
 

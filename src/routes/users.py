@@ -1,9 +1,8 @@
 from sqlalchemy.orm import Session
 from typing import List
 
-from ..utilities import crud
-from ..utilities import oauth2
-from ..database import schemas, models
+from ..utilities import crud, oauth2, utils
+from ..database import schemas
 from ..database.database import get_db
 from fastapi import Depends, status, HTTPException, APIRouter
 
@@ -45,12 +44,27 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
     db_user = crud.get_user_by_email(db, user)
 
-    if db_user == None:
-        new_user = crud.create_user(db, user)
+    email_validation_flag = utils.check_email(user)
+
+#First checks if user email has @wustl.edu extension, then checks if email already exists in the database.
+    if email_validation_flag:
+        if db_user == None:
+            new_user = crud.create_user(db, user)
+        else:
+            raise HTTPException(status_code=400, detail="Email already registered")
     else:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=400, detail="You must register with a @wustl.edu email address.")
 
     return new_user
+
+# #TEST
+# @router.delete("/all", tags=["Users"])
+# async def delete_all_users(db: Session = Depends(get_db)):
+#     """Deletes all users in the database"""
+
+#     crud.delete_all_users(db)
+
+#     return None
 
 
 # DELETE A USER BY ID
@@ -68,28 +82,29 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 
     return None
 
-# UPDATE A USERS FIRST NAME
-@router.patch("/first_name", tags=['Users'], response_model=schemas.UpdateFirstName)
-async def update_user_first_name(new_first_name:schemas.UpdateFirstName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users first name."""
-    user = crud.update_user_first_name(db, current_user_id, new_first_name)
+# # UPDATE A USERS FIRST NAME
+# @router.patch("/first_name", tags=['Users'], response_model=schemas.UpdateFirstName)
+# async def update_user_first_name(new_first_name:schemas.UpdateFirstName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users first name."""
+#     user = crud.update_user_first_name(db, current_user_id, new_first_name)
 
-    return  user
+#     return  user
 
-# UPDATES A USERS LAST NAME
-@router.patch("/last_name", tags=["Users"], response_model=schemas.UpdateLastName)
-async def update_user_last_name(new_last_name:schemas.UpdateLastName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users last name."""
+# # UPDATES A USERS LAST NAME
+# @router.patch("/last_name", tags=["Users"], response_model=schemas.UpdateLastName)
+# async def update_user_last_name(new_last_name:schemas.UpdateLastName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users last name."""
     
-    user = crud.update_user_last_name(db, current_user_id, new_last_name)
+#     user = crud.update_user_last_name(db, current_user_id, new_last_name)
 
-    return user
+#     return user
 
-# UPDATES A USERS EMAIL
-@router.patch("/email", tags=["Users"], response_model=schemas.UpdateEmail)
-async def update_user_email(new_email:schemas.UpdateEmail,db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users email."""
+# # UPDATES A USERS EMAIL
+# @router.patch("/email", tags=["Users"], response_model=schemas.UpdateEmail)
+# async def update_user_email(new_email:schemas.UpdateEmail,db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users email."""
 
-    user = crud.update_user_email(db, current_user_id, new_email)
+#     user = crud.update_user_email(db, current_user_id, new_email)
 
-    return user
+#     return user
+
