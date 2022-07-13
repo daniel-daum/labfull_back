@@ -95,12 +95,25 @@ def test_get_user_by_id_failure(authorized_client,create_user_fixture):
     assert res.json().get('detail') == "User with id: 2 was not found"
      
  
-def test_get_all_users(authorized_client):
+def test_get_all_users(authorized_client, create_multiple_users):
+
     res = authorized_client.get("/api/users/")
 
-    print(res.json())
+    list = res.json()
+
     assert res.status_code == 200
+    assert len(list) == 4
+    assert list[0]['email'] == "daniel@wustl.edu"
+    assert list[1]['email'] == "revan@wustl.edu"
+    assert list[2]['email'] == "malak@wustl.edu"
+    assert list[3]['email'] == "valkorian@wustl.edu"
 
 
+def test_delete_user(authorized_client,create_user_for_delete):
 
+    res = authorized_client.delete("/api/users/2")
 
+    res1= authorized_client.get("/api/users/")
+
+    assert res.status_code == 200
+    assert len(res1.json()) == 1

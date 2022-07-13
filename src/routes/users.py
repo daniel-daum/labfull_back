@@ -82,29 +82,29 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 
     return None
 
-# UPDATE A USERS FIRST NAME
-@router.patch("/first_name", tags=['Users'], response_model=schemas.UpdateFirstName)
-async def update_user_first_name(new_first_name:schemas.UpdateFirstName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users first name."""
-    user = crud.update_user_first_name(db, current_user_id, new_first_name)
+# # UPDATE A USERS FIRST NAME
+# @router.patch("/first_name", tags=['Users'], response_model=schemas.UpdateFirstName)
+# async def update_user_first_name(new_first_name:schemas.UpdateFirstName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users first name."""
+#     user = crud.update_user_first_name(db, current_user_id, new_first_name)
 
-    return  user
+#     return  user
 
-# UPDATES A USERS LAST NAME
-@router.patch("/last_name", tags=["Users"], response_model=schemas.UpdateLastName)
-async def update_user_last_name(new_last_name:schemas.UpdateLastName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users last name."""
+# # UPDATES A USERS LAST NAME
+# @router.patch("/last_name", tags=["Users"], response_model=schemas.UpdateLastName)
+# async def update_user_last_name(new_last_name:schemas.UpdateLastName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users last name."""
     
-    user = crud.update_user_last_name(db, current_user_id, new_last_name)
+#     user = crud.update_user_last_name(db, current_user_id, new_last_name)
 
-    return user
+#     return user
 
-# UPDATES A USERS EMAIL
-@router.patch("/email", tags=["Users"], response_model=schemas.UpdateEmail)
-async def update_user_email(new_email:schemas.UpdateEmail,db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
-    """Updates the current users email."""
+# # UPDATES A USERS EMAIL
+# @router.patch("/email", tags=["Users"], response_model=schemas.UpdateEmail)
+# async def update_user_email(new_email:schemas.UpdateEmail,db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
+#     """Updates the current users email."""
 
-    user = crud.update_user_email(db, current_user_id, new_email)
+#     user = crud.update_user_email(db, current_user_id, new_email)
 
-    return user
+#     return user
 
