@@ -24,7 +24,7 @@ class User_Roles(Base):
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 
-class site_permissions(Base):
+class Site_permissions(Base):
     __tablename__ = "site_permissions"
 
     id = Column(Integer, primary_key=True, nullable=False)
@@ -33,6 +33,14 @@ class site_permissions(Base):
     admin_created_by = Column(String(255))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
+
+class Token_list(Base):
+    __tablename__ = "token_list"
+
+    id = Column(Integer, primary_key=True, nullable=False)
+    token = Column(String(255), nullable=False)
+    users_id = Column(Integer)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
 
 class Supply(Base):
     __tablename__ = "supplies"

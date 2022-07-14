@@ -17,10 +17,26 @@ def test_create_user(client, session):
     assert new_user.email == "anakin@wustl.edu"
     assert new_user.id == 1
     assert type(new_user.created_at) == datetime
+    
 
     session.query(models.User).delete()
     session.commit()
 
+
+def test_user_added_to_roles(authorized_client, session):
+
+    user = {"first_name": "anakin",
+                      "last_name": "skywalker", "email": "anakin@wustl.edu", "password": "password"}
+
+    authorized_client.post("/api/users/", json=user)
+
+    res = authorized_client.get("/api/users/")
+
+    dbuser = session.query(models.User_Roles).filter(models.User_Roles.users_id == res.json()[1]['id']).first()
+
+    assert dbuser.id == 2
+    assert dbuser.role == "user"
+    assert dbuser.admin_created_by == "tsoth"
 
 
 

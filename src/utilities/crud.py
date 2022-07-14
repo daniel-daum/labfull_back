@@ -115,6 +115,19 @@ def create_role(db: Session, role:schemas.CreateRole):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Add JWT Token to blacklist table after creation
+def add_token_to_blist(db: Session, token:schemas.addToken):
+
+    issued_token = models.Token_list(**token)
+
+    db.add(issued_token)
+    db.commit()
+    db.refresh(issued_token)
+
+    return issued_token
+
+
+
 # GET ALL SUPPLIES
 def get_all_supplies(db:Session):
     """Returns all supplies in the database."""

@@ -110,13 +110,26 @@ class authorized_response(BaseModel):
     """Response model if authorized to access a page."""
     authorized: bool
 
-
+# Create Role  Schema and Response
 class CreateRole(BaseModel):
     """Create a Role Schema"""
     users_id:int
-    role_required:str
+    role:str
     admin_created_by:str
 
 class GetRoleResponse(CreateRole):
     """Create a Role response Schema"""
     created_at: datetime
+
+
+# JWT Token list schema and response
+
+class addToken(BaseModel):
+    token:str
+    users_id=int
+
+class getBlackJWT(addToken):
+    created_at: datetime
+    id:int
+
+
