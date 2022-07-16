@@ -194,7 +194,7 @@ def send_verification_email(db:Session, token:str, user:schemas.User):
     </div>
 
 
-    <p>This email was sent to: {user.email.capitalize()}
+    <p>This email was sent to: {user.email.upper()}
 
         Please do not reply to this message.
         
