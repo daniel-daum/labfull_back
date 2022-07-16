@@ -67,9 +67,6 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
     else:
         raise HTTPException(status_code=400, detail="You must register with a @wustl.edu email address.")
 
-    role_data = {"users_id":new_user.id,"role":f"{settings.ROLE}", "admin_created_by":f"{settings.ADMIN}"}
-
-    crud.create_role(db, role_data)
 
     return new_user
 

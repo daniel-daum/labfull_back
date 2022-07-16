@@ -10,6 +10,7 @@ from ..utilities import utils, crud
 from ..database.database import get_db
 from sqlalchemy.orm import Session
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from src.settings import settings
 
 
 router = APIRouter(tags=["Authentication"], prefix="/api/auth")
@@ -55,5 +56,10 @@ async def verify_email(token:str, db: Session = Depends(get_db)):
     db.commit()
 
     user = crud.get_user_by_id(db, payload.id)
+
+    #Give user permissions in permissions table after email is verfied
+    role_data = {"users_id":payload.id,"role":f"{settings.ROLE}", "admin_created_by":f"{settings.ADMIN}"}
+
+    crud.create_role(db, role_data)
 
     return user
