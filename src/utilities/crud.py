@@ -1,7 +1,16 @@
 from sqlalchemy.orm import Session
+
+from src.utilities import oauth2
 from ..database import models
 from ..database import schemas
 from . import utils
+from datetime import datetime
+from src.settings import settings
+import smtplib
+import ssl
+from email.message import EmailMessage
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL USERS
 def get_all_users(db: Session):
@@ -9,17 +18,22 @@ def get_all_users(db: Session):
 
     return db.query(models.User).all()
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # GET ONE USER BY ID
 def get_user_by_id(db: Session, id: int):
     """Returns a single user based on id."""
 
     return db.query(models.User).filter(models.User.id == id).first()
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 # GET ONE USER BY EMAIL
 def get_user_by_email(db: Session, user: schemas.CreateUser):
     """Returns a single user based on email."""
 
     return db.query(models.User).filter(models.User.email == user.email).first()
+ # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE NEW USER
 def create_user(db: Session, user: schemas.CreateUser):
@@ -35,6 +49,7 @@ def create_user(db: Session, user: schemas.CreateUser):
     db.refresh(new_user)
 
     return new_user
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # DELETE A USER
 def delete_user(db: Session, user: schemas.User):
@@ -44,15 +59,8 @@ def delete_user(db: Session, user: schemas.User):
     db.commit()
 
     return None
-#TEST
-# # Delete ALL USERS
-# def delete_all_users(db: Session):
 
-#     db.query(models.User).delete()
-
-#     db.commit()
-
-#     return None
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # UPDATE A USER - ALL
 def update_user(db: Session, id: int, user: schemas.User):
@@ -67,6 +75,7 @@ def update_user(db: Session, id: int, user: schemas.User):
     db.commit()
 
     return get_user_by_id(db,id)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # UPDATES A USERS FIRST NAME
 def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateFirstName):
@@ -78,6 +87,8 @@ def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.Up
 
     return get_user_by_id(db, current_user_id)
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # UPDATES A USERS LAST NAME
 def update_user_last_name(db: Session, current_user_id:int, new_name:schemas.UpdateLastName):
     """Updates a users first name"""
@@ -87,6 +98,10 @@ def update_user_last_name(db: Session, current_user_id:int, new_name:schemas.Upd
     db.commit()
 
     return get_user_by_id(db, current_user_id)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 # UPDATES A USERS EMAIL
 def update_user_email(db: Session, current_user_id:int, new_email:schemas.UpdateEmail):
@@ -103,6 +118,7 @@ def update_user_email(db: Session, current_user_id:int, new_email:schemas.Update
 
 # CREATE NEW USER ROLE
 def create_role(db: Session, role:schemas.CreateRole):
+    """Adds a 'role' to a user in the roles table. i.e. User or Admin"""
 
     new_role = models.User_Roles(**role)
 
@@ -126,18 +142,103 @@ def add_token_to_blist(db: Session, token:schemas.addToken):
 
     return issued_token
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Updates last login date.
+
+
+def update_last_login(db:Session, user_id:int):
+
+    current_datetime = datetime.now()
+
+    db.query(models.User).filter(models.User.id == user_id).update({models.User.last_login:current_datetime})
+
+    db.commit()
+
+
+    return get_user_by_id(db, user_id)
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# SENDS A VERIFICATION EMAIL WITH A LINK. LINK IS TO VERIFY EMAIL POST ROUTE AND INCLUDES A JWT 
+def send_verification_email(db:Session, token:str, user:schemas.User):
+
+    # Pack user data and token string into a dict
+    user_dict = {"users_id":user.id, "users_email":user.email, "temp_jwt":token}
+
+    # Add dict data into table model
+    temp_user_verification_info = models.Email_Verification(**user_dict)
+
+
+    #AAdd user data to the database
+    db.add(temp_user_verification_info)
+    db.commit()
+
+    # Generate and send an email to the user with verification information.
+    msg = EmailMessage()
+
+    msg['Subject'] = "LabFull - Verify Your Email Address"
+    msg['From'] = settings.EMAIL
+    msg['To'] = "daniel_daum@outlook.com"
+    msg.set_content(f'''
+    <html lang="en">
+    <body style="font-family:Arial, Helvetica, sans-serif ;">
+
+    <p>Hello, {user.first_name.title()}!</p>
+
+    <p> Please click the button below to verify your email address and complete registration for LabFull</p>  
+
+    <div>
+        <p style="font-weight: 700; color:black; font-size:1em; padding: .3em;"><a href="http://localhost:8000/api/auth/verify_email/{token}" style="text-decoration: underline; color:black" >Verify Your Email Address</a></p>
+    </div>
+
+
+    <p>This email was sent to: {user.email.capitalize()}
+
+        Please do not reply to this message.
+        
+        LabFull will never contact you by email asking you to validate your personal information such as your password. If you recieve such a request please contact us at <span style="text-decoration: underline ;">labfull@proton.me</span></p>
+    
+    </body>
+    </html>
+    ''', subtype='html')
+
+    context = ssl.create_default_context()
+
+ 
+
+    with smtplib.SMTP_SSL(settings.EMAIL_SERVER, 465, context=context) as smtp:
+        smtp.login(settings.EMAIL, settings.EMAIL_SERVER_KEY)
+        smtp.send_message(msg)
+        smtp.quit()
+
+    return
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+async def get_verification_jwt(db:Session, id:int):
+
+    verify_db_user = db.query(models.Email_Verification).filter(models.Email_Verification.id == id).first()
+
+    return verify_db_user
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL SUPPLIES
 def get_all_supplies(db:Session):
     """Returns all supplies in the database."""
     return db.query(models.Supply).all()
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # GET ONE SUPPLY BY ID
 def get_supply_by_id(db:Session, id:int):
     """Gets a single supply item from the database based on id."""
 
     return db.query(models.Supply).filter(models.Supply.id == id).first()
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE A NEW SUPPLY ITEM
 def create_new_supply(db:Session, supply:schemas.CreateSupply):
@@ -151,6 +252,8 @@ def create_new_supply(db:Session, supply:schemas.CreateSupply):
 
     return new_supply_item
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 # DELETE A SUPPLY ITEM
 def delete_supply_item(db:Session, supply:schemas.Supply):
     """Deletes a supply item from the database based on id."""
@@ -160,12 +263,5 @@ def delete_supply_item(db:Session, supply:schemas.Supply):
 
     return None
 
-# # UPDATE A SUPPLY ITEMS ORDER STATUS
-# def update_supply_order_status(db:Session, new_status:schemas.UpdateOrderedStatus):
-#     """Updates the ordered status of a supply item."""
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-#     db.query(models.Supply).filter(models.Supply.id == id).update({models.Supply.order_status:new_status.order_status})
-
-#     db.commit()
-
-#     return get_supply_by_id(db, int)

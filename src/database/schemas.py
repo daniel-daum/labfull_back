@@ -14,6 +14,7 @@ class UserBase(BaseModel):
 # Create New User Schema
 class CreateUser(UserBase):
     password: str
+    email_verified:Optional[bool]
 
     class Config:
           orm_mode = True
@@ -23,6 +24,7 @@ class CreateUser(UserBase):
 class User(UserBase):
       id: int
       created_at: datetime
+      email_verified:Optional[bool]
 
       class Config:
           orm_mode = True
@@ -102,6 +104,9 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: Optional[str] = None
 
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Check if authorized schemas
 
 class check_if_authorized(Token):
     page_name:str
@@ -109,6 +114,8 @@ class check_if_authorized(Token):
 class authorized_response(BaseModel):
     """Response model if authorized to access a page."""
     authorized: bool
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Create Role  Schema and Response
 class CreateRole(BaseModel):
@@ -122,7 +129,8 @@ class GetRoleResponse(CreateRole):
     created_at: datetime
 
 
-# JWT Token list schema and response
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# JWT Token blacklist schemas
 
 class addToken(BaseModel):
     token:str
@@ -131,5 +139,14 @@ class addToken(BaseModel):
 class getBlackJWT(addToken):
     created_at: datetime
     id:int
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+# Email verification schemas
+class EmailVerify(BaseModel):
+    id:int
+    temp_jwt:str
+    users_id:int
+    users_email:str
 
+class EmailVerifyResponse(EmailVerify):
+    created_at:datetime

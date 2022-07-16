@@ -21,4 +21,9 @@ class Settings(BaseSettings):
     ADMIN:str = os.getenv("ADMIN")
     ROLE:str = os.getenv("ROLE")
 
+    EMAIL:str = os.getenv("EMAIL")
+    EMAIL_SERVER:str = os.getenv("EMAIL_SERVER")
+    EMAIL_SERVER_KEY:str = os.getenv("EMAIL_SERVER_KEY")
+
+
 settings = Settings()

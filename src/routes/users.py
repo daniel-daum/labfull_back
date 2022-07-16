@@ -47,10 +47,21 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
     email_validation_flag = utils.check_email(user)
 
-#First checks if user email has @wustl.edu extension, then checks if email already exists in the database.
+#Checks if user email has @wustl.edu extension
     if email_validation_flag:
+
+        #checks if user already exists in the database.
         if db_user == None:
+
+            # CREATES A NEW USER IN THE DB 
             new_user = crud.create_user(db, user)
+
+            # CREATES A JWT FOR EMAIL VERIFICATION
+            token = oauth2.create_access_token(data={"user_id":new_user.id, "users_email":new_user.email})
+          
+            # SENDS AN EMAIL WITH THE JWT
+            crud.send_verification_email(db, token, new_user)
+
         else:
             raise HTTPException(status_code=400, detail="Email already registered")
     else:
@@ -61,15 +72,6 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
     crud.create_role(db, role_data)
 
     return new_user
-
-# #TEST
-# @router.delete("/all", tags=["Users"])
-# async def delete_all_users(db: Session = Depends(get_db)):
-#     """Deletes all users in the database"""
-
-#     crud.delete_all_users(db)
-
-#     return None
 
 
 # DELETE A USER BY ID
