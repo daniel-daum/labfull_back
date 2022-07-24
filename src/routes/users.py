@@ -15,6 +15,7 @@ router = APIRouter(tags=["Users"], prefix="/api/users")
 async def get_users(db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Returns all users in the database."""
 
+
     users = crud.get_all_users(db)
 
     if users == []:

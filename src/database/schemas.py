@@ -57,7 +57,7 @@ class SuppliesBase(BaseModel):
 
 class CreateSupply(SuppliesBase):
     date_ordered: date
-    temp_sensitive: str
+    temp_sensitive: bool
     order_status:Optional[str]
     users_id:int
 
@@ -74,18 +74,24 @@ class UpdateSupply(CreateSupply):
 class Supply(SuppliesBase):
     id: int
     date_ordered: date
-    temp_sensitive: str
+    temp_sensitive: bool
     recieved_by:Optional[str]
     users_id:int
     created_at:datetime
     order_status:Optional[str]
+    last_modified_at:Optional[datetime]
 
 
     class Config:
           orm_mode = True
 
-class UpdateOrderedStatus(BaseModel):
-    order_status:str
+# Update Order status
+class UpdateSupply(BaseModel):
+    id: int
+    item_name:Optional[str]
+    temp_sensitive:Optional[bool]
+    recieved_by:Optional[int]
+    quantity:Optional[str]
         
     class Config:
          orm_mode = True
@@ -103,6 +109,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     id: Optional[str] = None
+    users_email:Optional[str] = None
+    
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 

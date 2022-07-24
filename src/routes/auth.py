@@ -68,8 +68,10 @@ async def verify_email(token: str, db: Session = Depends(get_db)):
     # Give account user level permissions
     crud.create_role(db, role_data)
 
+    blacklist_token = {"token": token, "users_id": user.id}
+
     # Add TOKEN TO BLACKLIST TABLE  
-    crud.add_token_to_blist(db, token)
+    crud.add_token_to_blist(db, blacklist_token)
 
     return """
    <!DOCTYPE html>

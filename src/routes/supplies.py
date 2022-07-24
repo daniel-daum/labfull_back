@@ -57,15 +57,83 @@ async def delete_supply_item(id:int,db: Session = Depends(get_db), current_user:
 
     return None
 
-# UPDATE THE ORDERED STATUS OF A SUPPLY ITEM
-# @router.patch("/order_status/{id}", tags=["Supplies"])
-# async def update_ordered_status(id:int, db: Session = Depends(get_db), current_user:int = Depends(oauth2.get_current_user)):
 
-#     supply = crud.get_supply_by_id(db, id)
+# UPDATE SUPPLY ORDER STATUS
+@router.patch("/order_status/", tags=['Supplies'], response_model=schemas.Supply,status_code=status.HTTP_200_OK)
+async def update_order_status(supply:schemas.UpdateSupply, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
 
-#     if supply == None:
-#         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {id} was not found.")
+    supply_db = crud.get_supply_by_id(db, supply.id)
 
-#     updated_supply = crud.update_supply_order_status(id, db, )
+    if supply_db == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {supply.id} was not found.")
 
-#     return 
+    # Update the supply order status
+    updated_supply = crud.update_supply_order_status(db, supply)
+
+    #updated the last modified column
+    crud.update_supply_last_modified(db, supply.id)
+
+    return updated_supply
+
+# UPDATE SUPPLY ITEM NAME
+@router.patch("/item_name/", tags=['Supplies'], response_model=schemas.Supply,status_code=status.HTTP_200_OK)
+async def update_supply_name(supply:schemas.UpdateSupply, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+
+    supply_db = crud.get_supply_by_id(db, supply.id)
+
+    if supply_db == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {supply.id} was not found.")
+
+    updated_supply = crud.update_supply_item_name(db, supply)
+
+    crud.update_supply_last_modified(db, supply.id)
+
+    return updated_supply
+
+
+# UPDATE SUPPLY ITEM QUANTITY
+@router.patch("/quantity/", tags=['Supplies'], response_model=schemas.Supply,status_code=status.HTTP_200_OK)
+async def update_supply_name(supply:schemas.UpdateSupply, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+
+    supply_db = crud.get_supply_by_id(db, supply.id)
+
+    if supply_db == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {supply.id} was not found.")
+
+    updated_supply = crud.update_supply_item_quantity(db, supply)
+
+    crud.update_supply_last_modified(db, supply.id)
+
+    return updated_supply
+
+
+# UPDATE SUPPLY TEMP SENSITIVE
+@router.patch("/temp_sensitive/", tags=['Supplies'], response_model=schemas.Supply,status_code=status.HTTP_200_OK)
+async def update_supply_name(supply:schemas.UpdateSupply, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+
+    supply_db = crud.get_supply_by_id(db, supply.id)
+
+    if supply_db == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {supply.id} was not found.")
+
+    updated_supply = crud.update_supply_item_temp_sensitive(db, supply)
+
+    crud.update_supply_last_modified(db, supply.id)
+
+    return updated_supply
+
+
+# UPDATE RECIEVED BY
+@router.patch("/recieved_by/", tags=['Supplies'], response_model=schemas.Supply,status_code=status.HTTP_200_OK)
+async def update_supply_temp_sensitive(supply:schemas.UpdateSupply, db: Session = Depends(get_db),current_user:int = Depends(oauth2.get_current_user)):
+
+    supply_db = crud.get_supply_by_id(db, supply.id)
+
+    if supply_db == None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Supply with id: {supply.id} was not found.")
+
+    updated_supply = crud.update_supply_item_recieved_by(db, supply)
+
+    crud.update_supply_last_modified(db, supply.id)
+
+    return updated_supply

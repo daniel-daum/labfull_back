@@ -53,7 +53,7 @@ class Token_list(Base):
     token = Column(String(255), nullable=False)
     users_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-
+    
 class Supply(Base):
     __tablename__ = "supplies"
 
@@ -62,8 +62,8 @@ class Supply(Base):
     quantity = Column(Integer, nullable=False)
     date_ordered = Column(Date, nullable=False)
     order_status = Column(String(20), default="ordered")
-    temp_sensitive = Column(String(20))
     recieved_by = Column(String(255))
+    temp_sensitive = Column(Boolean)
     users_id = Column(Integer, ForeignKey("users.id"))
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
-
+    last_modified_at = Column(TIMESTAMP(timezone=True))

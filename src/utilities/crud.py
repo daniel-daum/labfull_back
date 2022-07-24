@@ -157,7 +157,88 @@ def update_last_login(db:Session, user_id:int):
 
 
     return get_user_by_id(db, user_id)
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Updates a supply order status
 
+def update_supply_order_status(db:Session, status:schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.order_status:status.order_status})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Updates a supply recieved by
+
+def update_supply_item_recieved_by(db:Session, status:schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.recieved_by:status.recieved_by})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Updates a supply item name
+
+def update_supply_item_name(db:Session,status:schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.item_name:status.item_name})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Updates a supply item name
+
+def update_supply_item_quantity(db:Session,status:schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.quantity:status.quantity})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Updates a supply temp sensitive
+
+def update_supply_item_temp_sensitive(db:Session,status:schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.temp_sensitive:status.temp_sensitive})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Updates last supply item modified time
+
+
+def update_supply_last_modified(db:Session, supply_id:int):
+
+    current_datetime = datetime.now()
+
+    db.query(models.Supply).filter(models.Supply.id == supply_id).update({models.Supply.last_modified_at:current_datetime})
+
+    db.commit()
+
+
+    return get_supply_by_id(db, supply_id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# # VERIFY USER PERMISSIONS
+
+# def get_permissiosn(db:Session, user_id:int):
+
+#   return db.query(models.User_Roles).filter(models.User_Roles.users_id == user_id).first()
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
