@@ -1,0 +1,24 @@
+version: '3'
+services:
+  api:
+    image: danieldaum/labfull_backend
+    ports:
+      - 80:8000
+    environment:
+      - DBTYPE=${DBTYPE}
+      - DBUSER=${DBUSER}
+      - DBPASS=${DBPASS}
+      - DBHOST=${DBHOST}
+      - DBPORT=${DBPORT}
+      - DBNAME=${DBNAME}
+      - DBNAME_TEST=${DBNAME_TEST}
+      - KEY=${KEY}
+      - ALGO=${ALGO}
+      - EXPIRE=${EXPIRE}
+      - ROLE=${ROLE}
+      - EMAIL=${EMAIL}
+      - EMAIL_SERVER=${EMAIL_SERVER}
+      - EMAIL_SERVER_KEY=${EMAIL_SERVER_KEY}
+
+  
+
