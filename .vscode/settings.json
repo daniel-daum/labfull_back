@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "labfull_development_local",
+            "database": "labfull_development",
+            "username": "postgres",
+            "password": "postgres"
+        }
+    ]
+}

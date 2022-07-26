@@ -14,7 +14,6 @@ class UserBase(BaseModel):
 # Create New User Schema
 class CreateUser(UserBase):
     password: str
-    email_verified:Optional[bool]
 
     class Config:
           orm_mode = True
