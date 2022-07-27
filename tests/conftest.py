@@ -42,98 +42,98 @@ def client(session):
     yield TestClient(app)
 
 
-@pytest.fixture(scope="function")
-def create_user_fixture(client):
-    """Creates a user in the test database"""
-    user_data = {"first_name": "daniel", "last_name": "daum",
-                 "email": "daniel@wustl.edu", "password": "password"}
+# @pytest.fixture(scope="function")
+# def create_user_fixture(client):
+#     """Creates a user in the test database"""
+#     user_data = {"first_name": "daniel", "last_name": "daum",
+#                  "email": "daniel@wustl.edu", "password": "password"}
 
-    res = client.post("/api/users/", json=user_data)
+#     res = client.post("/api/users/", json=user_data)
 
-    new_user = res.json()
-    new_user["password"] = user_data['password']
+#     new_user = res.json()
+#     new_user["password"] = user_data['password']
 
-    return new_user
-
-
-@pytest.fixture(scope="function")
-def token(create_user_fixture):
-    return oauth2.create_access_token(data={"user_id": create_user_fixture['id']})
+#     return new_user
 
 
-@pytest.fixture(scope="function")
-def authorized_client(client, token):
-    client.headers = {
-        **client.headers,
-        "Authorization": f"Bearer {token}"
-    }
-
-    return client
+# @pytest.fixture(scope="function")
+# def token(create_user_fixture):
+#     return oauth2.create_access_token(data={"user_id": create_user_fixture['id']})
 
 
-@pytest.fixture(scope="function")
-def create_multiple_users(authorized_client):
+# @pytest.fixture(scope="function")
+# def authorized_client(client, token):
+#     client.headers = {
+#         **client.headers,
+#         "Authorization": f"Bearer {token}"
+#     }
 
-    user_data = [{"first_name": "darth", "last_name": "revan", "email": "revan@wustl.edu", "password": "password"},
-             {"first_name": "darth", "last_name": "malak", "email": "malak@wustl.edu", "password": "password"},
-             {"first_name": "darth", "last_name": "valkorian", "email": "valkorian@wustl.edu", "password": "password"}]
+#     return client
 
-    res1 = authorized_client.post("/api/users/", json=user_data[0])
-    res2 = authorized_client.post("/api/users/", json=user_data[1])
-    res3 = authorized_client.post("/api/users/", json=user_data[2])
 
-    user1 = res1.json()
-    user2 = res2.json()
-    user3 = res3.json()
+# @pytest.fixture(scope="function")
+# def create_multiple_users(authorized_client):
 
-    users = [user1,user2,user3]
+#     user_data = [{"first_name": "darth", "last_name": "revan", "email": "revan@wustl.edu", "password": "password"},
+#              {"first_name": "darth", "last_name": "malak", "email": "malak@wustl.edu", "password": "password"},
+#              {"first_name": "darth", "last_name": "valkorian", "email": "valkorian@wustl.edu", "password": "password"}]
 
-    return users
+#     res1 = authorized_client.post("/api/users/", json=user_data[0])
+#     res2 = authorized_client.post("/api/users/", json=user_data[1])
+#     res3 = authorized_client.post("/api/users/", json=user_data[2])
+
+#     user1 = res1.json()
+#     user2 = res2.json()
+#     user3 = res3.json()
+
+#     users = [user1,user2,user3]
+
+#     return users
 
 
  
-@pytest.fixture(scope="function")
-def create_user_for_delete(authorized_client):
+# @pytest.fixture(scope="function")
+# def create_user_for_delete(authorized_client):
 
-    user_data = {"first_name":"kylo", "last_name":"ren", "email":"kyloe@wustl.edu", "password":"password"}
+#     user_data = {"first_name":"kylo", "last_name":"ren", "email":"kyloe@wustl.edu", "password":"password"}
 
-    res = authorized_client.post("/api/users/", json=user_data)
+#     res = authorized_client.post("/api/users/", json=user_data)
 
-    user = res.json()
+#     user = res.json()
 
-    return user
-
-
-@pytest.fixture(scope="function")
-def create_supply_item(authorized_client):
-
-    supply = {"item_name":"starfruit","quantity":80, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1}
-
-    res = authorized_client.post("/api/supplies/", json=supply)
-
-    new_supply = schemas.Supply(**res.json())
-
-    return new_supply
-
-@pytest.fixture(scope="function")
-def create_multiple_supplies(authorized_client):
-
-    supplies = [{"item_name":"starfruit","quantity":80, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1},
-                 {"item_name":"toilet paper","quantity":30, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1},
-                 {"item_name":"chips","quantity":1, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1}]
+#     return user
 
 
-    res1 = authorized_client.post("/api/supplies/", json=supplies[0])
-    res2 = authorized_client.post("/api/supplies/", json=supplies[1])
-    res3 = authorized_client.post("/api/supplies/", json=supplies[2])
+# @pytest.fixture(scope="function")
+# def create_supply_item(authorized_client):
 
-    supply1 = res1.json()
-    supply2 = res2.json()
-    supply3 = res3.json()
+#     supply = {"item_name":"starfruit","quantity":80, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1}
 
-    supply_list = [supply1, supply2, supply3]
+#     res = authorized_client.post("/api/supplies/", json=supply)
 
-    return supply_list
+#     new_supply = schemas.Supply(**res.json())
+
+#     return new_supply
+
+# @pytest.fixture(scope="function")
+# def create_multiple_supplies(authorized_client):
+
+#     supplies = [{"item_name":"starfruit","quantity":80, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1},
+#                  {"item_name":"toilet paper","quantity":30, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1},
+#                  {"item_name":"chips","quantity":1, "date_ordered":"2022-06-07", "temp_sensitive":"no",  "users_id":1}]
+
+
+#     res1 = authorized_client.post("/api/supplies/", json=supplies[0])
+#     res2 = authorized_client.post("/api/supplies/", json=supplies[1])
+#     res3 = authorized_client.post("/api/supplies/", json=supplies[2])
+
+#     supply1 = res1.json()
+#     supply2 = res2.json()
+#     supply3 = res3.json()
+
+#     supply_list = [supply1, supply2, supply3]
+
+#     return supply_list
 
 
 
