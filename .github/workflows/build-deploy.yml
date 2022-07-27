@@ -1,4 +1,4 @@
-name: Build
+name: CI Pipeline
 
 on:
   push:
@@ -7,13 +7,25 @@ on:
     branches: [ "main" ]
     
 jobs:
-  job1:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: Pull code from git repository
-        uses: actions/checkout@v3
-      - name: Print Hello to the Terminal
-        run: echo "Hello Daniel"
 
+      - name: pull code from repository
+        uses: actions/checkout@v3
+
+      - name: install python - 3.10.5
+        uses: actions/setup-python@v4
+        with:
+            python-version: '3.10.5' 
+
+      - name: update pip
+        run: python -m pip install --upgrade pip
+
+      - name: install dependacies
+        run: pip install -r requirements.txt
+
+      - name: run unit and integration tests
+        run: pytest
 
 
