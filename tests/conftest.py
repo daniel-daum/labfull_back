@@ -1,45 +1,45 @@
 # import json
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import sessionmaker
-# from src.settings import settings
-# from src.database.database import Base
-# from fastapi.testclient import TestClient
-# from src.database.database import get_db
-# from src.main import app
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from src.settings import settings
+from src.database.database import Base
+from fastapi.testclient import TestClient
+from src.database.database import get_db
+from src.main import app
 # from src.utilities import oauth2
 # from src.database import models, schemas
-# import pytest
+import pytest
 
 
-# engine = create_engine(settings.DBSTR_TEST)
+engine = create_engine(settings.DBSTR_TEST)
 
-# TestingSessionLocal = sessionmaker(
-#     autocommit=False, autoflush=False, bind=engine)
-
-
-# @pytest.fixture(scope="function")
-# def session():
-#     Base.metadata.drop_all(bind=engine)
-#     Base.metadata.create_all(bind=engine)
-
-#     db = TestingSessionLocal()
-#     try:
-#         yield db
-#     finally:
-#         db.close()
+TestingSessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine)
 
 
-# @pytest.fixture(scope="function")
-# def client(session):
-#     def override_get_db():
-#         try:
-#             yield session
-#         finally:
-#             session.close()
+@pytest.fixture(scope="function")
+def session():
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
-#     app.dependency_overrides[get_db] = override_get_db
+    db = TestingSessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
-#     yield TestClient(app)
+
+@pytest.fixture(scope="function")
+def client(session):
+    def override_get_db():
+        try:
+            yield session
+        finally:
+            session.close()
+
+    app.dependency_overrides[get_db] = override_get_db
+
+    yield TestClient(app)
 
 
 # @pytest.fixture(scope="function")
