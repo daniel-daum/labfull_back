@@ -31,7 +31,7 @@ app.include_router(auth.router)
 
 # ROOT
 @app.get("/")
-@limiter.limit("1/minute")
+# @limiter.limit("1/minute")
 async def root(request: Request):
 
     """Returns "Hello, World!"""
