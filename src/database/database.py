@@ -5,6 +5,13 @@ from src.settings import settings
 
 Base = declarative_base()
 
+print(settings.DBHOST)
+print(settings.DBNAME)
+print(settings.DBSTR_TEST)
+print(settings.DBSTR)
+print(settings.DBPORT)
+
+
 engine = create_engine(settings.DBSTR)
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
