@@ -1,4 +1,4 @@
-from conftest import client
+
 
 def test_root(client):
     res = client.get("/")
