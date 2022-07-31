@@ -14,6 +14,22 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10"]
+    env:
+      ADMIN: ${{secrets.ADMIN}}
+      ALGO: ${{secrets.ALGO}}
+      DBHOST: ${{secrets.DBHOST}}
+      DBNAME: ${{secrets.DBNAME}}
+      DBNAME_TEST: ${{secrets.DBNAME_TEST}}
+      DBPASS: ${{secrets.DBPASS}}
+      DBPORT: ${{secrets.DBPORT}}
+      DBTYPE: ${{secrets.DBTYPE}}
+      DBUSER: ${{secrets.DBUSER}}
+      EMAIL: ${{secrets.EMAIL}}
+      EMAIL_SERVER: ${{secrets.EMAIL_SERVER}}
+      EMAIL_SERVER_LEY: $${{secrets.EMAIL_SERVER_KEY}}
+      EXPIRE: $${{secrets.EXPIRE}}
+      KEY: ${{secrets.KEY}}
+      ROLE: ${{secrets.ROLE}}
 
     steps:
       - uses: actions/checkout@v3

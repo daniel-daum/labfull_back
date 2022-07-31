@@ -2,16 +2,14 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from src.settings import settings
-# from src.database.database import Base
+from src.database.database import Base
 from fastapi.testclient import TestClient
 from src.database.database import get_db
 from src.main import app
-# from src.utilities import oauth2
-# from src.database import models, schemas
+from src.utilities import oauth2
+from src.database import models, schemas
 import pytest
-from sqlalchemy.ext.declarative import declarative_base
 
-Base1 = declarative_base()
 
 engine = create_engine(settings.DBSTR_TEST)
 
@@ -21,8 +19,8 @@ TestingSessionLocal = sessionmaker(
 
 @pytest.fixture(scope="function")
 def session():
-    Base1.metadata.drop_all(bind=engine)
-    Base1.metadata.create_all(bind=engine)
+    Base.metadata.drop_all(bind=engine)
+    Base.metadata.create_all(bind=engine)
 
     db = TestingSessionLocal()
     try:
