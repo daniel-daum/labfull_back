@@ -37,7 +37,7 @@ def get_user_by_email(db: Session, user: schemas.CreateUser):
     """Returns a single user based on email."""
 
     return db.query(models.User).filter(models.User.email == user.email).first()
- # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE NEW USER
 
@@ -297,8 +297,7 @@ def send_verification_email(db: Session, token: str, user: schemas.User):
 
     <p>Hello, {user.first_name.title()}!</p>
 
-    <p> Please click the button below to verify your email address and complete registration for LabFull</p>  
-
+    <p> Please click the button below to verify your email address and complete registration for LabFull</p>
     <div>
         <p style="font-weight: 700; color:black; font-size:1em; padding: .3em;"><a href="http://localhost:8000/api/auth/verify_email/{token}" style="text-decoration: underline; color:black" >Verify Your Email Address</a></p>
     </div>
@@ -307,9 +306,7 @@ def send_verification_email(db: Session, token: str, user: schemas.User):
     <p>This email was sent to: {user.email.upper()}
 
         Please do not reply to this message.
-        
         LabFull will never contact you by email asking you to validate your personal information such as your password. If you recieve such a request please contact us at <span style="text-decoration: underline ;">labfull@proton.me</span></p>
-    
     </body>
     </html>
     ''', subtype='html')

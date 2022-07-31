@@ -22,7 +22,7 @@ async def login(user_credentials: OAuth2PasswordRequestForm = Depends(), db: Ses
     user = db.query(models.User).filter(
         models.User.email == user_credentials.username).first()
 
-    if user == None:
+    if user is None:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN, detail=f"Invalid Credentials")
 
@@ -88,7 +88,6 @@ async def verify_email(token: str, db: Session = Depends(get_db)):
         <div style="box-shadow: 0 1px 3px rgba(50, 50, 93, .15), 0 1px 0 rgba(0, 0, 0, .02);border-radius: .3em; border: 1px solid #1171ef; width: fit-content; background-color:#1171ef; display: flex; flex-direction: column; align-items: center; justify-content:center;">
         <p style=" color: white; width: fit-content; letter-spacing: .1em; font-size: 1em; padding: 1em; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif; font-weight: 600; ">You have successfully verified your email!</p>
     </div>
-    
     </body>
     </html>
         """

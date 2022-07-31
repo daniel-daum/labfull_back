@@ -32,7 +32,7 @@ async def get_single_supply(id: int, db: Session = Depends(get_db), current_user
 
     supply = crud.get_supply_by_id(db, id)
 
-    if supply == None:
+    if supply is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply Item with the id:{id} was not found.")
 
@@ -55,7 +55,7 @@ async def delete_supply_item(id: int, db: Session = Depends(get_db), current_use
 
     supply = crud.get_supply_by_id(db, id)
 
-    if supply == None:
+    if supply is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {id} was not found.")
 
@@ -70,7 +70,7 @@ async def update_order_status(supply: schemas.UpdateSupply, db: Session = Depend
 
     supply_db = crud.get_supply_by_id(db, supply.id)
 
-    if supply_db == None:
+    if supply_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {supply.id} was not found.")
 
@@ -90,7 +90,7 @@ async def update_supply_name(supply: schemas.UpdateSupply, db: Session = Depends
 
     supply_db = crud.get_supply_by_id(db, supply.id)
 
-    if supply_db == None:
+    if supply_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {supply.id} was not found.")
 
@@ -107,7 +107,7 @@ async def update_supply_name(supply: schemas.UpdateSupply, db: Session = Depends
 
     supply_db = crud.get_supply_by_id(db, supply.id)
 
-    if supply_db == None:
+    if supply_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {supply.id} was not found.")
 
@@ -124,7 +124,7 @@ async def update_supply_name(supply: schemas.UpdateSupply, db: Session = Depends
 
     supply_db = crud.get_supply_by_id(db, supply.id)
 
-    if supply_db == None:
+    if supply_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {supply.id} was not found.")
 
@@ -141,7 +141,7 @@ async def update_supply_temp_sensitive(supply: schemas.UpdateSupply, db: Session
 
     supply_db = crud.get_supply_by_id(db, supply.id)
 
-    if supply_db == None:
+    if supply_db is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"Supply with id: {supply.id} was not found.")
 

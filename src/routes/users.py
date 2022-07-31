@@ -33,7 +33,7 @@ async def get_single_user_id(id: int, db: Session = Depends(get_db), current_use
 
     user = crud.get_user_by_id(db, id)
 
-    if user == None:
+    if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id: {id} was not found")
 
@@ -53,7 +53,7 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
     if email_validation_flag:
 
         # checks if user already exists in the database.
-        if db_user == None:
+        if db_user is None:
 
             # CREATES A NEW USER IN THE DB
             new_user = crud.create_user(db, user)
@@ -82,7 +82,7 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 
     user = crud.get_user_by_id(db, id)
 
-    if user == None:
+    if user is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"User with id: {id} was not found")
 
