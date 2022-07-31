@@ -11,10 +11,11 @@ from src.settings import settings
 router = APIRouter(tags=["Users"], prefix="/api/users")
 
 # GET ALL USERS
+
+
 @router.get("/", status_code=status.HTTP_200_OK, response_model=List[schemas.User], tags=["Users"])
 async def get_users(db: Session = Depends(get_db), current_user_id: int = Depends(oauth2.get_current_user)):
     """Returns all users in the database."""
-
 
     users = crud.get_all_users(db)
 
@@ -48,26 +49,28 @@ async def create_new_user(user: schemas.CreateUser, db: Session = Depends(get_db
 
     email_validation_flag = utils.check_email(user)
 
-#Checks if user email has @wustl.edu extension
+# Checks if user email has @wustl.edu extension
     if email_validation_flag:
 
-        #checks if user already exists in the database.
+        # checks if user already exists in the database.
         if db_user == None:
 
-            # CREATES A NEW USER IN THE DB 
+            # CREATES A NEW USER IN THE DB
             new_user = crud.create_user(db, user)
 
             # CREATES A JWT FOR EMAIL VERIFICATION
-            token = oauth2.create_access_token(data={"user_id":new_user.id, "users_email":new_user.email})
-          
+            token = oauth2.create_access_token(
+                data={"user_id": new_user.id, "users_email": new_user.email})
+
             # SENDS AN EMAIL WITH THE JWT
             crud.send_verification_email(db, token, new_user)
 
         else:
-            raise HTTPException(status_code=400, detail="Email already registered")
+            raise HTTPException(
+                status_code=400, detail="Email already registered")
     else:
-        raise HTTPException(status_code=400, detail="You must register with a @wustl.edu email address.")
-
+        raise HTTPException(
+            status_code=400, detail="You must register with a @wustl.edu email address.")
 
     return new_user
 
@@ -99,7 +102,7 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 # @router.patch("/last_name", tags=["Users"], response_model=schemas.UpdateLastName)
 # async def update_user_last_name(new_last_name:schemas.UpdateLastName, db: Session = Depends(get_db), current_user_id:int = Depends(oauth2.get_current_user)):
 #     """Updates the current users last name."""
-    
+
 #     user = crud.update_user_last_name(db, current_user_id, new_last_name)
 
 #     return user
@@ -112,4 +115,3 @@ async def delete_user(id: int, db: Session = Depends(get_db), current_user_id: i
 #     user = crud.update_user_email(db, current_user_id, new_email)
 
 #     return user
-

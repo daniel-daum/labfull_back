@@ -13,6 +13,8 @@ from email.message import EmailMessage
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL USERS
+
+
 def get_all_users(db: Session):
     """Returns all users in the database."""
 
@@ -21,6 +23,8 @@ def get_all_users(db: Session):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ONE USER BY ID
+
+
 def get_user_by_id(db: Session, id: int):
     """Returns a single user based on id."""
 
@@ -36,6 +40,8 @@ def get_user_by_email(db: Session, user: schemas.CreateUser):
  # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE NEW USER
+
+
 def create_user(db: Session, user: schemas.CreateUser):
     """Creates a new user in the database."""
 
@@ -52,6 +58,8 @@ def create_user(db: Session, user: schemas.CreateUser):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # DELETE A USER
+
+
 def delete_user(db: Session, user: schemas.User):
     """Deletes a user in the database based on id."""
 
@@ -63,6 +71,8 @@ def delete_user(db: Session, user: schemas.User):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # UPDATE A USER - ALL
+
+
 def update_user(db: Session, id: int, user: schemas.User):
     """Updates all the attribue columns for a user based on id."""
 
@@ -74,14 +84,17 @@ def update_user(db: Session, id: int, user: schemas.User):
 
     db.commit()
 
-    return get_user_by_id(db,id)
+    return get_user_by_id(db, id)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # UPDATES A USERS FIRST NAME
-def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.UpdateFirstName):
+
+
+def update_user_first_name(db: Session, current_user_id: int, new_name: schemas.UpdateFirstName):
     """Updates a users first name"""
 
-    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.first_name:new_name.first_name})
+    db.query(models.User).filter(models.User.id == current_user_id).update(
+        {models.User.first_name: new_name.first_name})
 
     db.commit()
 
@@ -90,10 +103,13 @@ def update_user_first_name(db: Session, current_user_id:int, new_name:schemas.Up
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # UPDATES A USERS LAST NAME
-def update_user_last_name(db: Session, current_user_id:int, new_name:schemas.UpdateLastName):
+
+
+def update_user_last_name(db: Session, current_user_id: int, new_name: schemas.UpdateLastName):
     """Updates a users first name"""
 
-    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.last_name:new_name.last_name})
+    db.query(models.User).filter(models.User.id == current_user_id).update(
+        {models.User.last_name: new_name.last_name})
 
     db.commit()
 
@@ -104,10 +120,11 @@ def update_user_last_name(db: Session, current_user_id:int, new_name:schemas.Upd
 
 
 # UPDATES A USERS EMAIL
-def update_user_email(db: Session, current_user_id:int, new_email:schemas.UpdateEmail):
+def update_user_email(db: Session, current_user_id: int, new_email: schemas.UpdateEmail):
     """Updates a users email"""
 
-    db.query(models.User).filter(models.User.id == current_user_id).update({models.User.email:new_email.email})
+    db.query(models.User).filter(models.User.id == current_user_id).update(
+        {models.User.email: new_email.email})
 
     db.commit()
 
@@ -117,7 +134,7 @@ def update_user_email(db: Session, current_user_id:int, new_email:schemas.Update
 # -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE NEW USER ROLE
-def create_role(db: Session, role:schemas.CreateRole):
+def create_role(db: Session, role: schemas.CreateRole):
     """Adds a 'role' to a user in the roles table. i.e. User or Admin"""
 
     new_role = models.User_Roles(**role)
@@ -126,13 +143,14 @@ def create_role(db: Session, role:schemas.CreateRole):
     db.commit()
     db.refresh(new_role)
 
-
     return new_role
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Add JWT Token to blacklist table after creation
-def add_token_to_blist(db: Session, token:schemas.addToken):
+
+
+def add_token_to_blist(db: Session, token: schemas.addToken):
 
     issued_token = models.Token_list(**token)
 
@@ -147,22 +165,24 @@ def add_token_to_blist(db: Session, token:schemas.addToken):
 # Updates last login date.
 
 
-def update_last_login(db:Session, user_id:int):
+def update_last_login(db: Session, user_id: int):
 
     current_datetime = datetime.now()
 
-    db.query(models.User).filter(models.User.id == user_id).update({models.User.last_login:current_datetime})
+    db.query(models.User).filter(models.User.id == user_id).update(
+        {models.User.last_login: current_datetime})
 
     db.commit()
-
 
     return get_user_by_id(db, user_id)
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Updates a supply order status
 
-def update_supply_order_status(db:Session, status:schemas.UpdateSupply):
 
-    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.order_status:status.order_status})
+def update_supply_order_status(db: Session, status: schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update(
+        {models.Supply.order_status: status.order_status})
 
     db.commit()
 
@@ -171,21 +191,11 @@ def update_supply_order_status(db:Session, status:schemas.UpdateSupply):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Updates a supply recieved by
 
-def update_supply_item_recieved_by(db:Session, status:schemas.UpdateSupply):
 
-    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.recieved_by:status.recieved_by})
+def update_supply_item_recieved_by(db: Session, status: schemas.UpdateSupply):
 
-    db.commit()
-
-    return get_supply_by_id(db, status.id)
-
-# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-# Updates a supply item name
-
-def update_supply_item_name(db:Session,status:schemas.UpdateSupply):
-
-    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.item_name:status.item_name})
+    db.query(models.Supply).filter(models.Supply.id == status.id).update(
+        {models.Supply.recieved_by: status.recieved_by})
 
     db.commit()
 
@@ -195,9 +205,25 @@ def update_supply_item_name(db:Session,status:schemas.UpdateSupply):
 
 # Updates a supply item name
 
-def update_supply_item_quantity(db:Session,status:schemas.UpdateSupply):
 
-    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.quantity:status.quantity})
+def update_supply_item_name(db: Session, status: schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update(
+        {models.Supply.item_name: status.item_name})
+
+    db.commit()
+
+    return get_supply_by_id(db, status.id)
+
+# ------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+# Updates a supply item name
+
+
+def update_supply_item_quantity(db: Session, status: schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update(
+        {models.Supply.quantity: status.quantity})
 
     db.commit()
 
@@ -207,28 +233,29 @@ def update_supply_item_quantity(db:Session,status:schemas.UpdateSupply):
 
 # Updates a supply temp sensitive
 
-def update_supply_item_temp_sensitive(db:Session,status:schemas.UpdateSupply):
 
-    db.query(models.Supply).filter(models.Supply.id == status.id).update({models.Supply.temp_sensitive:status.temp_sensitive})
+def update_supply_item_temp_sensitive(db: Session, status: schemas.UpdateSupply):
+
+    db.query(models.Supply).filter(models.Supply.id == status.id).update(
+        {models.Supply.temp_sensitive: status.temp_sensitive})
 
     db.commit()
 
     return get_supply_by_id(db, status.id)
 
 
-
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Updates last supply item modified time
 
 
-def update_supply_last_modified(db:Session, supply_id:int):
+def update_supply_last_modified(db: Session, supply_id: int):
 
     current_datetime = datetime.now()
 
-    db.query(models.Supply).filter(models.Supply.id == supply_id).update({models.Supply.last_modified_at:current_datetime})
+    db.query(models.Supply).filter(models.Supply.id == supply_id).update(
+        {models.Supply.last_modified_at: current_datetime})
 
     db.commit()
-
 
     return get_supply_by_id(db, supply_id)
 
@@ -242,17 +269,19 @@ def update_supply_last_modified(db:Session, supply_id:int):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-# SENDS A VERIFICATION EMAIL WITH A LINK. LINK IS TO VERIFY EMAIL POST ROUTE AND INCLUDES A JWT 
-def send_verification_email(db:Session, token:str, user:schemas.User):
+# SENDS A VERIFICATION EMAIL WITH A LINK. LINK IS TO VERIFY EMAIL POST ROUTE AND INCLUDES A JWT
+
+
+def send_verification_email(db: Session, token: str, user: schemas.User):
 
     # Pack user data and token string into a dict
-    user_dict = {"users_id":user.id, "users_email":user.email, "temp_jwt":token}
+    user_dict = {"users_id": user.id,
+                 "users_email": user.email, "temp_jwt": token}
 
     # Add dict data into table model
     temp_user_verification_info = models.Email_Verification(**user_dict)
 
-
-    #AAdd user data to the database
+    # AAdd user data to the database
     db.add(temp_user_verification_info)
     db.commit()
 
@@ -287,8 +316,6 @@ def send_verification_email(db:Session, token:str, user:schemas.User):
 
     context = ssl.create_default_context()
 
- 
-
     with smtplib.SMTP_SSL(settings.EMAIL_SERVER, 465, context=context) as smtp:
         smtp.login(settings.EMAIL, settings.EMAIL_SERVER_KEY)
         smtp.send_message(msg)
@@ -299,22 +326,27 @@ def send_verification_email(db:Session, token:str, user:schemas.User):
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-async def get_verification_jwt(db:Session, id:int):
+async def get_verification_jwt(db: Session, id: int):
 
-    verify_db_user = db.query(models.Email_Verification).filter(models.Email_Verification.id == id).first()
+    verify_db_user = db.query(models.Email_Verification).filter(
+        models.Email_Verification.id == id).first()
 
     return verify_db_user
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ALL SUPPLIES
-def get_all_supplies(db:Session):
+
+
+def get_all_supplies(db: Session):
     """Returns all supplies in the database."""
     return db.query(models.Supply).all()
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # GET ONE SUPPLY BY ID
-def get_supply_by_id(db:Session, id:int):
+
+
+def get_supply_by_id(db: Session, id: int):
     """Gets a single supply item from the database based on id."""
 
     return db.query(models.Supply).filter(models.Supply.id == id).first()
@@ -322,7 +354,9 @@ def get_supply_by_id(db:Session, id:int):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # CREATE A NEW SUPPLY ITEM
-def create_new_supply(db:Session, supply:schemas.CreateSupply):
+
+
+def create_new_supply(db: Session, supply: schemas.CreateSupply):
     """Creates a new supply item in the database."""
 
     new_supply_item = models.Supply(**supply.dict())
@@ -336,7 +370,9 @@ def create_new_supply(db:Session, supply:schemas.CreateSupply):
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # DELETE A SUPPLY ITEM
-def delete_supply_item(db:Session, supply:schemas.Supply):
+
+
+def delete_supply_item(db: Session, supply: schemas.Supply):
     """Deletes a supply item from the database based on id."""
 
     db.delete(supply)
@@ -345,4 +381,3 @@ def delete_supply_item(db:Session, supply:schemas.Supply):
     return None
 
 # ------------------------------------------------------------------------------------------------------------------------------------------------------------------
-

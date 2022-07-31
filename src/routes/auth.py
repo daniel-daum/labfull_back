@@ -70,7 +70,7 @@ async def verify_email(token: str, db: Session = Depends(get_db)):
 
     blacklist_token = {"token": token, "users_id": user.id}
 
-    # Add TOKEN TO BLACKLIST TABLE  
+    # Add TOKEN TO BLACKLIST TABLE
     crud.add_token_to_blist(db, blacklist_token)
 
     return """
