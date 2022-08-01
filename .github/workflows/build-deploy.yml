@@ -74,8 +74,6 @@ jobs:
           base: ${{ github.event.repository.default_branch }}
           head: HEAD
       
-      - name: 'Dependency Review'
-        uses: actions/dependency-review-action@v2
 
   test:
     runs-on: ubuntu-latest
